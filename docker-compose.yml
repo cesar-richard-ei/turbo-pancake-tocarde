@@ -35,5 +35,12 @@ services:
         condition: service_healthy
     command: python manage.py runserver 0.0.0.0:8000
 
+  frontend:
+    image: tpt-frontend
+    build:
+      context: frontend
+    ports:
+      - "3000:3000"
+
 volumes:
   pgdata:
