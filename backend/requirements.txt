@@ -8,7 +8,7 @@ djangorestframework
 python-dotenv
 environ
 getconf
-psycopg2-binary
+psycopg[binary]
 split_settings
 debugpy==1.5.1
 gunicorn

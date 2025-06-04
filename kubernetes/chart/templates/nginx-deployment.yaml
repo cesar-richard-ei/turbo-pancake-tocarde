@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tpt-nginx
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    secrets.infisical.com/auto-reload: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tpt-nginx
+  template:
+    metadata:
+      labels:
+        app: tpt-nginx
+        version: v1
+        security.istio.io/tlsMode: istio
+        security.istio.io/injection: enabled
+      annotations:
+        security.istio.io/enableStrictMTLS: "true"
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      serviceAccountName: tpt-service-account
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        fsGroup: 101
+      initContainers:
+        - name: init-nginx-config
+          image: "nginx:alpine"
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c"]
+          args:
+            - cp /config-readonly/default.conf /config-writable/default.conf
+          volumeMounts:
+            - name: nginx-config-readonly
+              mountPath: /config-readonly
+            - name: nginx-config-writable
+              mountPath: /config-writable
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      containers:
+        - name: nginx
+          image: "nginx:alpine"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-run
+              mountPath: /run/nginx
+            - name: nginx-config-writable
+              mountPath: /etc/nginx/conf.d
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+            - name: nginx-temp
+              mountPath: /var/lib/nginx/tmp
+            - name: nginx-pid
+              mountPath: /var/run
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: nginx-run
+          emptyDir: {}
+        - name: nginx-config-readonly
+          configMap:
+            name: tpt-nginx-config
+        - name: nginx-config-writable
+          emptyDir: {}
+        - name: nginx-cache
+          emptyDir: {}
+        - name: nginx-temp
+          emptyDir: {}
+        - name: nginx-pid
+          emptyDir: {}
