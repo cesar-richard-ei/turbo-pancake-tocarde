@@ -65,8 +65,8 @@ jobs:
         uses: docker/login-action@master
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.DOCKER_LOGIN }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
