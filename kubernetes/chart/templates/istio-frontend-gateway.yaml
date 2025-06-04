@@ -1,0 +1,98 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: tpt-gateway
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-weight": "-5"
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "{{ .Values.ingress.host }}"
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - "{{ .Values.ingress.host }}"
+      tls:
+        mode: SIMPLE
+        credentialName: tpt-tls
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: tpt
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-weight": "-5"
+spec:
+  hosts:
+    - "{{ .Values.ingress.host }}"
+  gateways:
+    - tpt-gateway
+  http:
+    # API routes - à travers Nginx qui peut afficher les erreurs personnalisées
+    - match:
+        - uri:
+            prefix: /api/
+      route:
+        - destination:
+            host: tpt-nginx
+            port:
+              number: 80
+
+    # Admin routes - à travers Nginx qui peut afficher les erreurs personnalisées
+    - match:
+        - uri:
+            prefix: /admin/
+      route:
+        - destination:
+            host: tpt-nginx
+            port:
+              number: 80
+
+    # Static files - vers le serveur Nginx qui est optimisé pour servir des fichiers statiques
+    - match:
+        - uri:
+            prefix: /static/
+      route:
+        - destination:
+            host: tpt-nginx
+            port:
+              number: 80
+
+    # Media files - vers le serveur Nginx qui est optimisé pour servir des fichiers statiques
+    - match:
+        - uri:
+            prefix: /media/
+      route:
+        - destination:
+            host: tpt-nginx
+            port:
+              number: 80
+
+    # Sentry Tunnel - vers Nginx qui gère le proxy vers Sentry
+    - match:
+        - uri:
+            exact: /tunnel
+      route:
+        - destination:
+            host: tpt-nginx
+            port:
+              number: 80
+
+    # Toutes les autres routes - vers le frontend
+    - route:
+        - destination:
+            host: tpt-frontend
+            port:
+              number: 80

@@ -1,0 +1,50 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: tpt-frontend
+  namespace: {{ .Release.Namespace }}
+spec:
+  host: tpt-frontend
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: tpt-nginx
+  namespace: {{ .Release.Namespace }}
+spec:
+  host: tpt-nginx
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: tpt-postgres
+  namespace: {{ .Release.Namespace }}
+spec:
+  host: tpt-postgres
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: nginx-to-web
+  namespace: {{ .Release.Namespace }}
+spec:
+  host: tpt-backend
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN
+    tls:
+      mode: ISTIO_MUTUAL
+      sni: tpt-backend.{{ .Release.Namespace }}.svc.cluster.local
+  subsets:
+  - name: v1
+    labels:
+      version: v1

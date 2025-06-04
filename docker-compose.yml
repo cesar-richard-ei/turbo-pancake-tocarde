@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:17-alpine
+    user: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: tpt
+      POSTGRES_DB: tpt
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 1s
+      timeout: 2s
+      retries: 15
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d/
+
+  backend:
+    image: tpt-backend
+    build:
+      context: backend
+    environment:
+      TPT_DJANGO_SECRET: "XTBKwS71lkjRRV-bEd-AxQ3PL2o9LyKBv9oyCfTzSM8"
+      TPT_DJANGO_DEBUG: "True"
+      TPT_DJANGO_ALLOWED_HOSTS: "*"
+      TPT_CSRF_TRUSTED_ORIGINS: "http://localhost:3000"
+      TPT_DB_DEFAULT: "postgres://postgres:tpt@db/tpt"
+      TPT_LOG_LEVEL: "INFO"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/tpt:/code
+    depends_on:
+      db:
+        condition: service_healthy
+    command: python manage.py runserver 0.0.0.0:8000
+
+volumes:
+  pgdata:

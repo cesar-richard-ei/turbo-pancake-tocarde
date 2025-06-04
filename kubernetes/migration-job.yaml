@@ -1,0 +1,33 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: django-migrate
+  namespace: tpt-production
+spec:
+  ttlSecondsAfterFinished: 30
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      serviceAccountName: tpt-service-account
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: django-migrate
+          image: ghcr.io/cesar-richard-ei/turbo-pancake-tocarde-backend:latest
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Migrating database"
+              python manage.py migrate
+              echo "Migrations done"
+          envFrom:
+            - configMapRef:
+                name: tpt-config
+            - secretRef:
+                name: tpt-secrets
+  backoffLimit: 2

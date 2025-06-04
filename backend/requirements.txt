@@ -1,0 +1,15 @@
+dj-database-url
+django
+django-cors-headers
+django-environ
+django-extensions
+django-split-settings
+djangorestframework
+python-dotenv
+environ
+getconf
+psycopg[binary]
+split_settings
+debugpy==1.5.1
+gunicorn
+django-currentuser
