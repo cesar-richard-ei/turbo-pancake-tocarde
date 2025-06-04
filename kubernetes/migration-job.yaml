@@ -3,7 +3,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: django-migrate
-  namespace: tpt-unknown-namespace
 spec:
   ttlSecondsAfterFinished: 30
   template:
