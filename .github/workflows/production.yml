@@ -174,7 +174,7 @@ jobs:
       - name: Deploy to production
         run: |
           helm upgrade --install tpt-production ./kubernetes/chart \
-            -f ./kubernetes/chart/values-production.yaml \
+            -f ./kubernetes/chart/values.yaml \
             -n tpt-production \
             --create-namespace \
             --atomic \
