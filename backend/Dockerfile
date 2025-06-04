@@ -1,11 +1,6 @@
 FROM python:3.13.3-slim-bookworm AS base
 LABEL org.opencontainers.image.authors="Cesar Richard <cesar@crichard.fr>"
 
-ARG TPT_VERSION=dev
-ENV TPT_VERSION=${TPT_VERSION}
-ARG TPT_SENTRY_ENVIRONMENT=dev
-ENV TPT_SENTRY_ENVIRONMENT=${TPT_SENTRY_ENVIRONMENT}
-
 RUN apt-get update && \
     apt-get full-upgrade -y && \
     apt-get install --no-install-recommends -y gcc && \
