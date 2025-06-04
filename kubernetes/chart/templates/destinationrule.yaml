@@ -12,17 +12,6 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: tpt-nginx
-  namespace: {{ .Release.Namespace }}
-spec:
-  host: tpt-nginx
-  trafficPolicy:
-    tls:
-      mode: ISTIO_MUTUAL
----
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
   name: tpt-postgres
   namespace: {{ .Release.Namespace }}
 spec:
@@ -34,7 +23,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: nginx-to-web
+  name: backend-rule
   namespace: {{ .Release.Namespace }}
 spec:
   host: tpt-backend

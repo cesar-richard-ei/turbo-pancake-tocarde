@@ -1,66 +1,141 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: tpt-frontend
+#   namespace: {{ .Release.Namespace }}
+#   annotations:
+#     secrets.infisical.com/auto-reload: "true"
+# spec:
+#   replicas: {{ .Values.frontend.replicas | int }}
+#   selector:
+#     matchLabels:
+#       app: tpt-frontend
+#   template:
+#     metadata:
+#       labels:
+#         app: tpt-frontend
+#         version: v1
+#         security.istio.io/tlsMode: istio
+#         security.istio.io/injection: enabled
+#       annotations:
+#         security.istio.io/enableStrictMTLS: "true"
+#     spec:
+#       imagePullSecrets:
+#         - name: ghcr-secret
+#       serviceAccountName: tpt-service-account
+#       securityContext:
+#         runAsNonRoot: true
+#         runAsUser: 101  # nginx user
+#         fsGroup: 101    # nginx group
+#       containers:
+#         - name: frontend
+#           image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+#           imagePullPolicy: Always
+#           ports:
+#             - containerPort: 80
+#               name: http
+#           volumeMounts:
+#             - name: nginx-run
+#               mountPath: /run/nginx
+#           securityContext:
+#             allowPrivilegeEscalation: false
+#             capabilities:
+#               drop:
+#                 - ALL
+#           resources:
+#             requests:
+#               cpu: {{ .Values.frontend.resources.requests.cpu | default "50m" }}
+#               memory: {{ .Values.frontend.resources.requests.memory | default "64Mi" }}
+#             limits:
+#               cpu: {{ .Values.frontend.resources.limits.cpu | default "100m" }}
+#               memory: {{ .Values.frontend.resources.limits.memory | default "128Mi" }}
+#           livenessProbe:
+#             httpGet:
+#               path: /
+#               port: 80
+#             initialDelaySeconds: 10
+#             periodSeconds: 10
+#           readinessProbe:
+#             httpGet:
+#               path: /
+#               port: 80
+#             initialDelaySeconds: 5
+#             periodSeconds: 5
+#       volumes:
+#         - name: nginx-run
+#           emptyDir: {}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: tpt-frontend
-  namespace: {{ .Release.Namespace }}
+  namespace: "{{ .Values.namespace }}"
   annotations:
     secrets.infisical.com/auto-reload: "true"
 spec:
-  replicas: {{ .Values.frontend.replicas | int }}
+  replicas: {{ .Values.web.replicas | int }}
   selector:
     matchLabels:
       app: tpt-frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
   template:
     metadata:
       labels:
         app: tpt-frontend
         version: v1
-        security.istio.io/tlsMode: istio
-        security.istio.io/injection: enabled
-      annotations:
-        security.istio.io/enableStrictMTLS: "true"
+        sidecar.istio.io/inject: "true"
     spec:
+      serviceAccountName: tpt-service-account
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - tpt-frontend
+              topologyKey: "kubernetes.io/hostname"
       imagePullSecrets:
         - name: ghcr-secret
-      serviceAccountName: tpt-service-account
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 101  # nginx user
-        fsGroup: 101    # nginx group
+        fsGroup: 1000
       containers:
-        - name: frontend
-          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+        - name: web
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: Always
+          command:
+            - /bin/sh
+            - -c
+            - |
+              python manage.py collectstatic --noinput
+              gunicorn tpt.wsgi:application --bind 0.0.0.0:8000
+          envFrom:
+            - configMapRef:
+                name: tpt-config
+            - secretRef:
+                name: tpt-secrets
           ports:
-            - containerPort: 80
-              name: http
-          volumeMounts:
-            - name: nginx-run
-              mountPath: /run/nginx
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-          resources:
-            requests:
-              cpu: {{ .Values.frontend.resources.requests.cpu | default "50m" }}
-              memory: {{ .Values.frontend.resources.requests.memory | default "64Mi" }}
-            limits:
-              cpu: {{ .Values.frontend.resources.limits.cpu | default "100m" }}
-              memory: {{ .Values.frontend.resources.limits.memory | default "128Mi" }}
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 80
-            initialDelaySeconds: 10
-            periodSeconds: 10
+            - containerPort: 8000
           readinessProbe:
             httpGet:
               path: /
-              port: 80
+              port: 8000
             initialDelaySeconds: 5
-            periodSeconds: 5
-      volumes:
-        - name: nginx-run
-          emptyDir: {}
+            periodSeconds: 2
+            timeoutSeconds: 2
+            failureThreshold: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000

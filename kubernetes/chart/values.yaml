@@ -45,9 +45,9 @@ prometheus:
 revisionHistoryLimit: 10
 
 frontend:
-  replicas: 0
+  replicas: 1
   image:
-    repository: ghcr.io/cesar-richard-ei/turbo-pancake-tocarde-frontend
+    repository: ghcr.io/cesar-richard-ei/turbo-pancake-tocarde-backend
     tag: latest
   resources:
     requests:
