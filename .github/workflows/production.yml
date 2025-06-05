@@ -1,0 +1,183 @@
+name: Production Deploy
+
+on:
+  push:
+    branches: [ "main", "release" ]
+  pull_request:
+    branches: [ "main", "release" ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME_BACKEND: ${{ github.repository }}-backend
+  IMAGE_NAME_FRONTEND: ${{ github.repository }}-frontend
+
+jobs:
+  tag:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    name: Create Tag
+    runs-on: ubuntu-24.04
+    outputs:
+      tag_name: ${{ steps.tag_version.outputs.new_tag }}
+      tag_changelog: ${{ steps.tag_version.outputs.changelog }}
+    steps:
+      - uses: actions/checkout@master
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_release_rules: FEAT:minor,FIX:patch,CI:patch,BUILD:patch,REVERT:patch,DOC:patch,MAJOR:major,MINOR:minor,PATCH:patch,STYLE:patch,REFACTOR:patch,PERF:patch,TEST:patch,WIP:patch
+
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    name: Create Release
+    runs-on: ubuntu-24.04
+    needs: tag
+    permissions:
+      contents: write
+    outputs:
+      html_url: ${{ steps.create_release.outputs.html_url }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Create Release
+        id: create_release
+        uses: ncipollo/release-action@main
+        with:
+          tag: ${{ needs.tag.outputs.tag_name }}
+          body: ${{ needs.tag.outputs.tag_changelog }}
+
+  build-and-push-backend:
+    needs: [tag, release]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@master
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: backend
+          push: true
+          build-args: |
+            TPT_VERSION=${{ needs.tag.outputs.tag_name }}
+            TPT_SENTRY_ENVIRONMENT=production
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:${{ needs.tag.outputs.tag_name }}
+            ${{ github.ref == 'refs/heads/main' && format('{0}/{1}:latest', env.REGISTRY, env.IMAGE_NAME_BACKEND) || '' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # build-and-push-frontend:
+  #   needs: [tag, release]
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-24.04
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@master
+
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@master
+
+  #     - name: Login to GitHub Container Registry
+  #       uses: docker/login-action@master
+  #       with:
+  #         registry: ${{ env.REGISTRY }}
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.DOCKER_TOKEN }}
+
+  #     - name: Build and push Docker image
+  #       uses: docker/build-push-action@v6
+  #       with:
+  #         context: frontend
+  #         push: true
+  #         tags: |
+  #           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_FRONTEND }}:${{ needs.tag.outputs.tag_name }}
+  #           ${{ github.ref == 'refs/heads/main' && format('{0}/{1}:latest', env.REGISTRY, env.IMAGE_NAME_FRONTEND) || '' }}
+  #         cache-from: type=gha
+  #         cache-to: type=gha,mode=max
+
+  deploy-production:
+    needs:
+      - tag
+      - build-and-push-backend
+      # - build-and-push-frontend
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: arc-runner-set
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'latest'
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'latest'
+
+      - name: Génère kubeconfig à la volée
+        shell: bash
+        env:
+          KUBE_TOKEN: ${{ secrets.KUBE_TOKEN }}
+        run: |
+          cat <<EOF > kubeconfig
+          apiVersion: v1
+          kind: Config
+          clusters:
+          - name: default
+            cluster:
+              server: https://kubernetes.default.svc
+              insecure-skip-tls-verify: true
+          users:
+          - name: ci
+            user:
+              token: ${{ secrets.KUBE_TOKEN }}
+          contexts:
+          - name: ci
+            context:
+              cluster: default
+              user: ci
+              namespace: tpt-production
+          current-context: ci
+          EOF
+          chmod 400 kubeconfig
+          echo "KUBECONFIG=$PWD/kubeconfig" >> $GITHUB_ENV
+
+      - name: Run migrations
+        run: |
+          sed -i 's|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:${{ needs.tag.outputs.tag_name }}|' kubernetes/migration-job.yaml
+          kubectl apply -f kubernetes/migration-job.yaml -n tpt-production
+          echo "Attente de la fin des migrations..."
+          kubectl wait --for=condition=complete job/django-migrate -n tpt-production --timeout=300s
+
+      - name: Deploy to production
+        run: |
+          helm upgrade --install tpt-production ./kubernetes/chart \
+            -f ./kubernetes/chart/values.yaml \
+            -n tpt-production \
+            --create-namespace \
+            --atomic \
+            --set image.tag=${{ needs.tag.outputs.tag_name }} \
+            --set frontend.image.tag=${{ needs.tag.outputs.tag_name }} \
+            --timeout 5m

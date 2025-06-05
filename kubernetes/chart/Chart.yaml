@@ -1,0 +1,5 @@
+apiVersion: v2
+name: tpt
+description: A Helm chart for deploying Turbo Pancake Tocarde application
+version: 1.0.0
+appVersion: "{{ .Values.image.tag }}"

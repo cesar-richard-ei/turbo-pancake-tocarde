@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tpt-backend
+  namespace: "{{ .Values.namespace }}"
+  annotations:
+    secrets.infisical.com/auto-reload: "true"
+spec:
+  replicas: {{ .Values.web.replicas | int }}
+  selector:
+    matchLabels:
+      app: tpt-backend
+      version: v1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
+  template:
+    metadata:
+      labels:
+        app: tpt-backend
+        version: v1
+        sidecar.istio.io/inject: "true"
+    spec:
+      serviceAccountName: tpt-service-account
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - tpt-backend
+              topologyKey: "kubernetes.io/hostname"
+      imagePullSecrets:
+        - name: ghcr-secret
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: web
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: Always
+          command:
+            - /bin/sh
+            - -c
+            - |
+              python manage.py collectstatic --noinput
+              gunicorn tpt.wsgi:application --bind 0.0.0.0:8000
+          envFrom:
+            - configMapRef:
+                name: tpt-config
+            - secretRef:
+                name: tpt-secrets
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            timeoutSeconds: 2
+            failureThreshold: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
