@@ -47,10 +47,10 @@ COPY --from=builder /code/requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --no-cache --no-deps /wheels/* && \
     pip install -r requirements.txt && \
-    rm -rf /wheels
+    rm -rf /wheels requirements.txt
 
 COPY --chown=tpt:tpt ./manage.py /code/manage.py
-COPY --chown=tpt:tpt ./tpt/ /code/tpt/
+COPY --chown=tpt:tpt ./tpt /code/tpt
 
 USER tpt
 
@@ -58,4 +58,4 @@ RUN TPT_DJANGO_SECRET=whatever python manage.py collectstatic --noinput --clear
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "if [ \"$TPT_SENTRY_ENVIRONMENT\" = \"production\" ] || [ \"$TPT_SENTRY_ENVIRONMENT\" = \"staging\" ]; then gunicorn tpt.wsgi:application --bind 0.0.0.0:8000; else python manage.py runserver 0.0.0.0:8000; fi"]
+CMD ["gunicorn", "tpt.wsgi:application", "--bind", "0.0.0.0:8000"]

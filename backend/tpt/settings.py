@@ -2,7 +2,7 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = '+uochl)=pkgm#_8v0d)e&w0+0h9$d-+p)w19my_0^5om%ur#e1'
+SECRET_KEY = os.getenv("TPT_DJANGO_SECRET")
 
 DEBUG = os.getenv("TPT_DJANGO_DEBUG", "False") == "True"
 
@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tpt.user',
 ]
 
 MIDDLEWARE = [
@@ -92,3 +93,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+
+AUTH_USER_MODEL = "user.User"
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

@@ -20,27 +20,31 @@ services:
     build:
       context: backend
     environment:
-      TPT_DJANGO_SECRET: "XTBKwS71lkjRRV-bEd-AxQ3PL2o9LyKBv9oyCfTzSM8"
+      TPT_DJANGO_SECRET: "+uochl)=pkgm#_8v0d)e&w0+0h9$d-+p)w19my_0^5om%ur#e2"
       TPT_DJANGO_DEBUG: "True"
       TPT_DJANGO_ALLOWED_HOSTS: "*"
       TPT_CSRF_TRUSTED_ORIGINS: "http://localhost:3000"
-      TPT_DB_DEFAULT: "postgres://postgres:tpt@db/tpt"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: tpt
+      POSTGRES_DB: tpt
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
       TPT_LOG_LEVEL: "INFO"
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/tpt:/code
+      - ./backend/tpt:/code/tpt
     depends_on:
       db:
         condition: service_healthy
     command: python manage.py runserver 0.0.0.0:8000
 
-  frontend:
-    image: tpt-frontend
-    build:
-      context: frontend
-    ports:
-      - "3000:3000"
+  # frontend:
+  #   image: tpt-frontend
+  #   build:
+  #     context: frontend
+  #   ports:
+  #     - "3000:3000"
 
 volumes:
   pgdata:
