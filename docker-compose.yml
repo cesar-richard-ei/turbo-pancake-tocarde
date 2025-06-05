@@ -20,7 +20,7 @@ services:
     build:
       context: backend
     environment:
-      TPT_DJANGO_SECRET: "+uochl)=pkgm#_8v0d)e&w0+0h9$d-+p)w19my_0^5om%ur#e2"
+      DJANGO_SECRET_KEY: "+uochl)=pkgm#_8v0d)e&w0+0h9$d-+p)w19my_0^5om%ur#e2"
       TPT_DJANGO_DEBUG: "True"
       TPT_DJANGO_ALLOWED_HOSTS: "*"
       TPT_CSRF_TRUSTED_ORIGINS: "http://localhost:3000"
