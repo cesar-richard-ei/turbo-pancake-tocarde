@@ -49,7 +49,8 @@ RUN pip install --upgrade pip && \
     pip install -r requirements.txt && \
     rm -rf /wheels
 
-COPY --chown=tpt:tpt ./tpt/ /code/
+COPY --chown=tpt:tpt ./manage.py /code/manage.py
+COPY --chown=tpt:tpt ./tpt/ /code/tpt/
 
 USER tpt
 
