@@ -118,7 +118,7 @@ jobs:
     needs:
       - tag
       - build-and-push-backend
-      # - build-and-push-frontend
+      - build-and-push-frontend
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: arc-runner-set
     environment: production
