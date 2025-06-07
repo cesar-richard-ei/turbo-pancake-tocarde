@@ -47,7 +47,7 @@ revisionHistoryLimit: 10
 frontend:
   replicas: 1
   image:
-    repository: ghcr.io/cesar-richard-ei/turbo-pancake-tocarde-backend
+    repository: ghcr.io/cesar-richard-ei/turbo-pancake-tocarde-frontend
     tag: latest
   resources:
     requests:
