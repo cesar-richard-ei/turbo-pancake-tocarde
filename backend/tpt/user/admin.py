@@ -7,7 +7,7 @@ from tpt.user.models import User
 
 
 @admin.register(User)
-class PumpkinUserAdmin(UserAdmin):
+class UserAdmin(UserAdmin):
     list_display = (
         "email",
         "first_name",

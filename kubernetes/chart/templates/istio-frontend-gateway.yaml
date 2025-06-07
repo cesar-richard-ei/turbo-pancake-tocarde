@@ -45,7 +45,7 @@ spec:
     # API routes - à travers Nginx qui peut afficher les erreurs personnalisées
     - match:
         - uri:
-            prefix: /api/
+            prefix: /api
       route:
         - destination:
             host: tpt-backend
@@ -59,7 +59,7 @@ spec:
     # Admin routes - à travers Nginx qui peut afficher les erreurs personnalisées
     - match:
         - uri:
-            prefix: /admin/
+            prefix: /admin
       route:
         - destination:
             host: tpt-backend
@@ -73,7 +73,7 @@ spec:
     # Static files - vers le serveur Nginx qui est optimisé pour servir des fichiers statiques
     - match:
         - uri:
-            prefix: /static/
+            prefix: /static
       route:
         - destination:
             host: tpt-backend
@@ -87,7 +87,7 @@ spec:
     # Media files - vers le serveur Nginx qui est optimisé pour servir des fichiers statiques
     - match:
         - uri:
-            prefix: /media/
+            prefix: /media
       route:
         - destination:
             host: tpt-backend
@@ -115,9 +115,9 @@ spec:
     # Toutes les autres routes - vers le frontend
     - route:
         - destination:
-            host: tpt-backend
+            host: tpt-frontend
             port:
-              number: 8000
+              number: 80
           headers:
             request:
               set:

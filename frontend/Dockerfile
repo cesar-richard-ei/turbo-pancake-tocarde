@@ -10,6 +10,8 @@ WORKDIR /app
 # Utiliser Node.js pour le build au lieu de Bun
 RUN npm run build
 
+
+
 FROM nginx:alpine
 LABEL org.opencontainers.image.authors="Cesar Richard <cesar@crichard.fr>"
 LABEL org.opencontainers.image.source="https://github.com/cesar-richard-ei/turbo-pancake-tocarde"
@@ -36,6 +38,7 @@ COPY nginx/nginx-main.conf /etc/nginx/nginx.conf
 # Copier la config Nginx spécifique au serveur
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
+# Copier les fichiers statiques du frontend
 COPY --from=build-env /app/build/client/ /usr/share/nginx/html
 
 # Exposer le port 80
