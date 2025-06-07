@@ -1,12 +1,13 @@
-FROM node:20-alpine AS production-dependencies-env
-COPY ./package.json package-lock.json /app/
+FROM oven/bun:1 AS dependencies-env
+COPY ./package.json ./bun.lock /app/
 WORKDIR /app
-RUN npm ci --omit=dev
+RUN bun install
 
 FROM node:20-alpine AS build-env
+COPY --from=dependencies-env /app/node_modules /app/node_modules
 COPY . /app/
-COPY --from=production-dependencies-env /app/node_modules /app/node_modules
 WORKDIR /app
+# Utiliser Node.js pour le build au lieu de Bun
 RUN npm run build
 
 FROM nginx:alpine
