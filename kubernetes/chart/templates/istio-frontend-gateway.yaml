@@ -16,17 +16,6 @@ spec:
         protocol: HTTP
       hosts:
         - "{{ .Values.ingress.host }}"
-      tls:
-        httpsRedirect: true
-    - port:
-        number: 443
-        name: https
-        protocol: HTTPS
-      hosts:
-        - "{{ .Values.ingress.host }}"
-      tls:
-        mode: SIMPLE
-        credentialName: istio-system/tpt-tls
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -51,10 +40,6 @@ spec:
             host: tpt-backend
             port:
               number: 8000
-          headers:
-            request:
-              set:
-                X-Forwarded-Proto: https
 
     # Admin routes - à travers Nginx qui peut afficher les erreurs personnalisées
     - match:
@@ -65,10 +50,6 @@ spec:
             host: tpt-backend
             port:
               number: 8000
-          headers:
-            request:
-              set:
-                X-Forwarded-Proto: https
 
     # Static files - vers le serveur Nginx qui est optimisé pour servir des fichiers statiques
     - match:
@@ -79,10 +60,6 @@ spec:
             host: tpt-backend
             port:
               number: 8000
-          headers:
-            request:
-              set:
-                X-Forwarded-Proto: https
 
     # Media files - vers le serveur Nginx qui est optimisé pour servir des fichiers statiques
     - match:
@@ -93,10 +70,6 @@ spec:
             host: tpt-backend
             port:
               number: 8000
-          headers:
-            request:
-              set:
-                X-Forwarded-Proto: https
 
     # Sentry Tunnel - vers Nginx qui gère le proxy vers Sentry
     - match:
@@ -107,10 +80,6 @@ spec:
             host: tpt-backend
             port:
               number: 8000
-          headers:
-            request:
-              set:
-                X-Forwarded-Proto: https
 
     # Toutes les autres routes - vers le frontend
     - route:
@@ -118,7 +87,3 @@ spec:
             host: tpt-frontend
             port:
               number: 80
-          headers:
-            request:
-              set:
-                X-Forwarded-Proto: https
