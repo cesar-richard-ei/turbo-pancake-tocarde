@@ -100,3 +100,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 AUTH_USER_MODEL = "user.User"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Configuration SSL pour proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_TRUSTED_ORIGINS = os.getenv(
+    "TPT_CSRF_TRUSTED_ORIGINS", 
+    "https://tocarde.fr"
+).split(",")
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
