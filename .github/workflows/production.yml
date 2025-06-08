@@ -180,4 +180,4 @@ jobs:
             --atomic \
             --set image.tag=${{ needs.tag.outputs.tag_name }} \
             --set frontend.image.tag=${{ needs.tag.outputs.tag_name }} \
-            --timeout 5m
+            --timeout 1m
