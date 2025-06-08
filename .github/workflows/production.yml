@@ -13,7 +13,7 @@ env:
 
 jobs:
   tag:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Create Tag
     runs-on: ubuntu-24.04
     outputs:
@@ -29,7 +29,7 @@ jobs:
           custom_release_rules: FEAT:minor,FIX:patch,CI:patch,BUILD:patch,REVERT:patch,DOC:patch,MAJOR:major,MINOR:minor,PATCH:patch,STYLE:patch,REFACTOR:patch,PERF:patch,TEST:patch,WIP:patch
 
   release:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Create Release
     runs-on: ubuntu-24.04
     needs: tag
@@ -49,7 +49,7 @@ jobs:
 
   build-and-push-backend:
     needs: [tag, release]
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -84,7 +84,7 @@ jobs:
 
   build-and-push-frontend:
     needs: [tag, release]
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -119,7 +119,7 @@ jobs:
       - tag
       - build-and-push-backend
       - build-and-push-frontend
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: arc-runner-set
     environment: production
     steps:
@@ -180,4 +180,4 @@ jobs:
             --atomic \
             --set image.tag=${{ needs.tag.outputs.tag_name }} \
             --set frontend.image.tag=${{ needs.tag.outputs.tag_name }} \
-            --timeout 1m
+            --timeout 5m

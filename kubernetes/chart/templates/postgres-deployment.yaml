@@ -117,4 +117,4 @@ spec:
         storageClassName: {{ .Values.postgres.storageClass | default "longhorn-default" }}
         resources:
           requests:
-            storage: {{ .Values.postgres.storage | default "10Gi" }}
+            storage: {{ .Values.postgres.storage | default "3Gi" }}
