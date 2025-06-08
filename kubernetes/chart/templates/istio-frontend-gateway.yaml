@@ -26,7 +26,7 @@ spec:
         - "{{ .Values.ingress.host }}"
       tls:
         mode: SIMPLE
-        credentialName: istio-system/istio-ingressgateway-certs
+        credentialName: istio-system/tpt-tls
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -117,7 +117,7 @@ spec:
         - destination:
             host: tpt-frontend
             port:
-              number: 80
+              number: 443
           headers:
             request:
               set:
