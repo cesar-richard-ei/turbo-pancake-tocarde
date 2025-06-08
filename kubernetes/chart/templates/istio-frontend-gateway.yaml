@@ -26,7 +26,7 @@ spec:
         - "{{ .Values.ingress.host }}"
       tls:
         mode: SIMPLE
-        credentialName: istio-system/tpt-tls
+        credentialName: tpt-tls
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -42,7 +42,7 @@ spec:
   gateways:
     - tpt-gateway
   http:
-    # API routes - à travers Nginx qui peut afficher les erreurs personnalisées
+    # API routes - Backend Django
     - match:
         - uri:
             prefix: /api
@@ -56,7 +56,7 @@ spec:
               set:
                 X-Forwarded-Proto: https
 
-    # Admin routes - à travers Nginx qui peut afficher les erreurs personnalisées
+    # Admin routes - Backend Django
     - match:
         - uri:
             prefix: /admin
@@ -70,7 +70,7 @@ spec:
               set:
                 X-Forwarded-Proto: https
 
-    # Static files - vers le serveur Nginx qui est optimisé pour servir des fichiers statiques
+    # Static files - Backend Django
     - match:
         - uri:
             prefix: /static
@@ -84,7 +84,7 @@ spec:
               set:
                 X-Forwarded-Proto: https
 
-    # Media files - vers le serveur Nginx qui est optimisé pour servir des fichiers statiques
+    # Media files - Backend Django
     - match:
         - uri:
             prefix: /media
@@ -98,7 +98,7 @@ spec:
               set:
                 X-Forwarded-Proto: https
 
-    # Sentry Tunnel - vers Nginx qui gère le proxy vers Sentry
+    # Sentry Tunnel - Backend Django
     - match:
         - uri:
             exact: /tunnel
@@ -112,13 +112,9 @@ spec:
               set:
                 X-Forwarded-Proto: https
 
-    # Toutes les autres routes - vers le frontend
+    # Toutes les autres routes - Frontend React
     - route:
         - destination:
             host: tpt-frontend
             port:
-              number: 443
-          headers:
-            request:
-              set:
-                X-Forwarded-Proto: https
+              number: 80
