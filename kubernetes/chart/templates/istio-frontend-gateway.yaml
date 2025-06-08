@@ -26,7 +26,7 @@ spec:
         - "{{ .Values.ingress.host }}"
       tls:
         mode: SIMPLE
-        credentialName: tpt-tls
+        credentialName: istio-system/tpt-tls
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService

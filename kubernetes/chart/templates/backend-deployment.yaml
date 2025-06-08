@@ -14,7 +14,7 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 1
+      maxUnavailable: 0
       maxSurge: 2
   template:
     metadata:
@@ -22,6 +22,9 @@ spec:
         app: tpt-backend
         version: v1
         sidecar.istio.io/inject: "true"
+      annotations:
+        proxy.istio.io/config: '{"holdApplicationUntilProxyStarts": true}'
+        sidecar.istio.io/rewriteAppHTTPProbers: "true"
     spec:
       serviceAccountName: tpt-service-account
       affinity:
@@ -47,7 +50,7 @@ spec:
             - -c
             - |
               python manage.py collectstatic --noinput
-              gunicorn tpt.wsgi:application --bind 0.0.0.0:8000
+              gunicorn tpt.wsgi:application --bind 0.0.0.0:8000 --timeout 60
           envFrom:
             - configMapRef:
                 name: tpt-config
@@ -59,10 +62,26 @@ spec:
             httpGet:
               path: /
               port: 8000
-            initialDelaySeconds: 5
-            periodSeconds: 2
-            timeoutSeconds: 2
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 5
             failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 30
           resources:
             requests:
               cpu: 100m
