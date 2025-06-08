@@ -20,10 +20,8 @@ spec:
       labels:
         app: tpt-frontend
         version: v1
-        security.istio.io/tlsMode: istio
-        security.istio.io/injection: enabled
       annotations:
-        security.istio.io/enableStrictMTLS: "true"
+        sidecar.istio.io/inject: "false"
     spec:
       imagePullSecrets:
         - name: ghcr-secret
@@ -39,19 +37,9 @@ spec:
           ports:
             - containerPort: 80
               name: http
-            - containerPort: 443
-              name: https
           volumeMounts:
             - name: nginx-run
               mountPath: /run/nginx
-            - name: nginx-config
-              mountPath: /etc/nginx/conf.d/default.conf
-              subPath: nginx.conf
-            - name: nginx-main-config
-              mountPath: /etc/nginx/nginx.conf
-              subPath: nginx-main.conf
-            - name: ssl-certs
-              mountPath: /etc/nginx/ssl
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -80,18 +68,3 @@ spec:
       volumes:
         - name: nginx-run
           emptyDir: {}
-        - name: nginx-config
-          configMap:
-            name: frontend-nginx-config
-            items:
-              - key: nginx.conf
-                path: nginx.conf
-        - name: nginx-main-config
-          configMap:
-            name: frontend-nginx-config
-            items:
-              - key: nginx-main.conf
-                path: nginx-main.conf
-        - name: ssl-certs
-          secret:
-            secretName: tpt-ssl-copy
