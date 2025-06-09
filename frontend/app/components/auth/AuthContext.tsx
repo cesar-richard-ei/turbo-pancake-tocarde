@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { getAuth, logout } from '../../lib/allauth';
 
@@ -36,9 +36,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // Référence pour suivre si un refreshUser est en cours
+  const isRefreshing = useRef(false);
 
   const refreshUser = async () => {
+    // Éviter les appels en parallèle
+    if (isRefreshing.current) return;
+    
     try {
+      isRefreshing.current = true;
       setIsLoading(true);
       setError(null);
       
@@ -62,6 +68,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.error('Auth error:', err);
     } finally {
       setIsLoading(false);
+      isRefreshing.current = false;
     }
   };
 
@@ -97,6 +104,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
     
     const handleAuthChange = (event: CustomEvent) => {
+      // Ignorer les événements si refreshUser est déjà en cours
+      if (isRefreshing.current) return;
+      
       if (event.detail?.meta?.is_authenticated) {
         refreshUser();
       } else {

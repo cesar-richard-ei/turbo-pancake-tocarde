@@ -20,6 +20,20 @@ export function AuthCallback() {
         const providerId = queryParams.get('provider') || 'google';
         const token = queryParams.get('token');
 
+        // Vérifier d'abord si l'utilisateur est déjà authentifié
+        const authResponse = await getAuth();
+        if (authResponse.status === 200 && authResponse.meta?.is_authenticated) {
+          setStatus('success');
+          setUserData(authResponse.data);
+          
+          // Rediriger vers la page d'accueil après un court délai
+          setTimeout(() => {
+            navigate('/');
+          }, 1500);
+          return;
+        }
+
+        // Si l'utilisateur n'est pas authentifié, vérifier le token
         if (!token) {
           setStatus('error');
           setErrorMessage('Token manquant dans l\'URL de callback');
