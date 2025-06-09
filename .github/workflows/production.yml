@@ -15,7 +15,7 @@ jobs:
   tag:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Create Tag
-    runs-on: ubuntu-24.04
+    runs-on: arc-runner-set
     outputs:
       tag_name: ${{ steps.tag_version.outputs.new_tag }}
       tag_changelog: ${{ steps.tag_version.outputs.changelog }}
@@ -31,7 +31,7 @@ jobs:
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Create Release
-    runs-on: ubuntu-24.04
+    runs-on: arc-runner-set
     needs: tag
     permissions:
       contents: write
@@ -50,7 +50,7 @@ jobs:
   build-and-push-backend:
     needs: [tag, release]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-24.04
+    runs-on: arc-runner-set
     permissions:
       contents: read
       packages: write
@@ -85,7 +85,7 @@ jobs:
   build-and-push-frontend:
     needs: [tag, release]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-24.04
+    runs-on: arc-runner-set
     permissions:
       contents: read
       packages: write
