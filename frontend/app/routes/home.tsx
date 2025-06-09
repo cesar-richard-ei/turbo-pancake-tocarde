@@ -13,6 +13,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   const { isAuthenticated, user, isLoading } = useAuth();
+  const userData = user?.user || user;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -26,7 +27,7 @@ export default function Home() {
         ) : isAuthenticated ? (
           <div className="bg-white shadow rounded-lg p-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">
-              Bienvenue, {user?.username} !
+              Bienvenue, { userData?.username || userData?.display } !
             </h1>
             <p className="text-gray-600">
               Vous êtes connecté avec succès à votre compte. Explorez notre application et profitez de toutes ses fonctionnalités.

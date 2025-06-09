@@ -6,6 +6,8 @@ export function NavBar() {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const userData = user?.user || user;
+
   const handleLogout = async () => {
     await logout();
   };
@@ -38,62 +40,67 @@ export function NavBar() {
             {isLoading ? (
               <div className="w-8 h-8 border-t-4 border-blue-500 border-solid rounded-full animate-spin" />
             ) : isAuthenticated ? (
-              <div className="ml-3 relative">
-                <div>
-                  <button
-                    onClick={toggleMenu}
-                    className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    id="user-menu-button"
-                    aria-expanded="false"
-                    aria-haspopup="true"
-                  >
-                    <span className="sr-only">Ouvrir le menu utilisateur</span>
-                    <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                      {user?.username?.charAt(0).toUpperCase() || 'U'}
-                    </div>
-                  </button>
+              <>
+                <div className="mr-4 text-gray-700">
+                  Bienvenue, <span className="font-semibold">{userData?.username || userData?.display}</span> !
                 </div>
-                {isMenuOpen && (
-                  <div
-                    className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-                    role="menu"
-                    aria-orientation="vertical"
-                    aria-labelledby="user-menu-button"
-                    tabIndex={-1}
-                  >
-                    <div className="block px-4 py-2 text-xs text-gray-400">
-                      Connecté en tant que <span className="font-bold">{user?.username}</span>
-                    </div>
-                    <Link
-                      to="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      role="menuitem"
-                      tabIndex={-1}
-                      id="user-menu-item-0"
-                    >
-                      Profil
-                    </Link>
-                    <Link
-                      to="/settings"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      role="menuitem"
-                      tabIndex={-1}
-                      id="user-menu-item-1"
-                    >
-                      Paramètres
-                    </Link>
+                <div className="ml-3 relative">
+                  <div>
                     <button
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      role="menuitem"
-                      tabIndex={-1}
-                      id="user-menu-item-2"
+                      onClick={toggleMenu}
+                      className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      id="user-menu-button"
+                      aria-expanded="false"
+                      aria-haspopup="true"
                     >
-                      Déconnexion
+                      <span className="sr-only">Ouvrir le menu utilisateur</span>
+                      <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                        {userData?.username?.charAt(0).toUpperCase() || 'U'}
+                      </div>
                     </button>
                   </div>
-                )}
-              </div>
+                  {isMenuOpen && (
+                    <div
+                      className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="user-menu-button"
+                      tabIndex={-1}
+                    >
+                      <div className="block px-4 py-2 text-xs text-gray-400">
+                        Connecté en tant que <span className="font-bold">{userData?.username || userData?.display}</span>
+                      </div>
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        role="menuitem"
+                        tabIndex={-1}
+                        id="user-menu-item-0"
+                      >
+                        Profil
+                      </Link>
+                      <Link
+                        to="/settings"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        role="menuitem"
+                        tabIndex={-1}
+                        id="user-menu-item-1"
+                      >
+                        Paramètres
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        role="menuitem"
+                        tabIndex={-1}
+                        id="user-menu-item-2"
+                      >
+                        Déconnexion
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </>
             ) : (
               <div className="flex items-center space-x-4">
                 <Link
