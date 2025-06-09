@@ -54,7 +54,7 @@ COPY --chown=tpt:tpt ./tpt /code/tpt
 
 USER tpt
 
-RUN TPT_DJANGO_SECRET=whatever python manage.py collectstatic --noinput --clear
+RUN DJANGO_SECRET_KEY=whatever python manage.py collectstatic --noinput --clear
 
 EXPOSE 8000
 
