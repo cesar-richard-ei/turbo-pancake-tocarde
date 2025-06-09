@@ -10,7 +10,7 @@ class User(AbstractUser):
     A User is a user of the TPT application.
     """
 
-    username: str = None
+    username: str = models.CharField(max_length=100, unique=True)
     email: str = models.EmailField(_("email address"), unique=True)
     last_name: str = models.CharField(max_length=255)
     first_name: str = models.CharField(max_length=255)

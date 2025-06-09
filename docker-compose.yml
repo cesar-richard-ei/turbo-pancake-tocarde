@@ -23,7 +23,7 @@ services:
       DJANGO_SECRET_KEY: "+uochl)=pkgm#_8v0d)e&w0+0h9%d-+p)w19my_0^5om%ur#e2"
       TPT_DJANGO_DEBUG: "True"
       TPT_DJANGO_ALLOWED_HOSTS: "*"
-      TPT_CSRF_TRUSTED_ORIGINS: "http://localhost:3000"
+      TPT_CSRF_TRUSTED_ORIGINS: "http://localhost:5173"
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: tpt
       POSTGRES_DB: tpt
@@ -38,14 +38,6 @@ services:
       db:
         condition: service_healthy
     command: python manage.py runserver 0.0.0.0:8000
-
-  # frontend:
-  #   build:
-  #     context: frontend
-  #     cache_from:
-  #       - ghcr.io/cesar-richard-ei/turbo-pancake-tocarde-frontend:latest
-  #   ports:
-  #     - "3000:80"
 
 volumes:
   pgdata:
