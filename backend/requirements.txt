@@ -14,3 +14,5 @@ debugpy==1.5.1
 gunicorn
 django-currentuser
 whitenoise
+# AllAuth
+django-allauth[socialaccount]
