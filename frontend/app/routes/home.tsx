@@ -24,50 +24,47 @@ export default function Home() {
   const userData = user?.user || user;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-yellow-50 dark:from-blue-950 dark:to-yellow-900">
       {/* Header */}
-      <header className="bg-white/95 backdrop-blur-sm border-b sticky top-0 z-50">
+      <header className="bg-white/95 dark:bg-blue-950/95 backdrop-blur-sm border-b border-yellow-400 dark:border-yellow-700 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">LT</span>
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-800 to-yellow-400 rounded-full flex items-center justify-center">
+                <span className="text-yellow-300 font-bold text-lg">LTT</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">La Tocarde</h1>
-                <p className="text-sm text-gray-600">Association Étudiante</p>
+                <h1 className="text-xl font-bold text-blue-800 dark:text-yellow-300">La Tocarde</h1>
+                <p className="text-sm text-blue-700 dark:text-yellow-200">Association Étudiante</p>
               </div>
             </div>
-
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
-              <Link to="#accueil" className="text-gray-700 hover:text-blue-600 transition-colors">
+              <Link to="#accueil" className="text-blue-800 dark:text-yellow-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">
                 Accueil
               </Link>
-              <Link to="#evenements" className="text-gray-700 hover:text-blue-600 transition-colors">
+              <Link to="#evenements" className="text-blue-800 dark:text-yellow-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">
                 Événements
               </Link>
-              <Link to="#apropos" className="text-gray-700 hover:text-blue-600 transition-colors">
+              <Link to="#apropos" className="text-blue-800 dark:text-yellow-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">
                 À propos
               </Link>
-              <Link to="#contact" className="text-gray-700 hover:text-blue-600 transition-colors">
+              <Link to="#contact" className="text-blue-800 dark:text-yellow-200 hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors">
                 Contact
               </Link>
             </nav>
-
             {/* Auth Buttons */}
             <div className="hidden md:flex items-center space-x-3">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="text-blue-800 hover:bg-yellow-100 dark:text-yellow-200 dark:hover:bg-blue-900">
                 Connexion
               </Button>
-              <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+              <Button size="sm" className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-blue-900">
                 S'inscrire
               </Button>
             </div>
-
             {/* Mobile Menu Button */}
-            <Button variant="ghost" size="sm" className="md:hidden">
+            <Button variant="ghost" size="sm" className="md:hidden text-blue-800 hover:bg-yellow-100 dark:text-yellow-200 dark:hover:bg-blue-900">
               <Menu className="h-5 w-5" />
             </Button>
           </div>
@@ -78,22 +75,24 @@ export default function Home() {
       <section className="py-12 md:py-20">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
-            <Badge className="mb-4 bg-blue-100 text-blue-800 hover:bg-blue-100">Association Étudiante Officielle</Badge>
-            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Bienvenue chez{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+            <Badge className="mb-4 bg-yellow-400 text-blue-900 hover:bg-yellow-300 dark:bg-yellow-700 dark:text-blue-900 dark:hover:bg-yellow-600">
+              Association Falucharde
+            </Badge>
+            <h2 className="text-4xl md:text-6xl font-bold text-blue-900 dark:text-yellow-200 mb-6">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-yellow-200">
                 La Tocarde
               </span>
+              {" "}vous souhaite le bonsoir !
             </h2>
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-blue-800 dark:text-yellow-100 mb-8 max-w-2xl mx-auto">
               Rejoignez notre communauté étudiante dynamique et participez à des événements inoubliables tout au long de
               l'année universitaire.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+              <Button size="lg" className="bg-blue-800 hover:bg-blue-900 text-yellow-300 dark:bg-blue-900 dark:hover:bg-blue-950 dark:text-yellow-300">
                 Devenir membre
               </Button>
-              <Button size="lg" variant="outline">
+              <Button size="lg" variant="outline" className="border-yellow-400 text-blue-800 hover:bg-yellow-100 dark:border-yellow-600 dark:text-yellow-200 dark:hover:bg-yellow-900">
                 Découvrir nos événements
               </Button>
             </div>
@@ -105,33 +104,33 @@ export default function Home() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Login/Register Section */}
           <div className="lg:col-span-1">
-            <Card className="sticky top-24">
+            <Card className="sticky top-24 bg-white dark:bg-blue-950/70 dark:border-yellow-700 shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5 text-blue-600" />
+                <CardTitle className="flex items-center gap-2 text-blue-900 dark:text-yellow-300">
+                  <Users className="h-5 w-5 text-blue-800 dark:text-yellow-400" />
                   Espace Membre
                 </CardTitle>
-                <CardDescription>Connectez-vous ou créez votre compte pour accéder à tous nos services</CardDescription>
+                <CardDescription className="text-blue-700 dark:text-yellow-100">Connectez-vous ou créez votre compte pour accéder à tous nos services</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email étudiant</Label>
-                  <Input id="email" type="email" placeholder="votre.email@universite.fr" />
+                  <Label htmlFor="email" className="text-blue-800 dark:text-yellow-200">Email étudiant</Label>
+                  <Input id="email" type="email" placeholder="votre.email@universite.fr" className="border-yellow-400 focus:border-blue-700 dark:bg-blue-900 dark:border-yellow-600 dark:text-yellow-50 dark:focus:border-yellow-400" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">Mot de passe</Label>
-                  <Input id="password" type="password" placeholder="••••••••" />
+                  <Label htmlFor="password" className="text-blue-800 dark:text-yellow-200">Mot de passe</Label>
+                  <Input id="password" type="password" placeholder="••••••••" className="border-yellow-400 focus:border-blue-700 dark:bg-blue-900 dark:border-yellow-600 dark:text-yellow-50 dark:focus:border-yellow-400" />
                 </div>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700">Se connecter</Button>
-                <Separator />
+                <Button className="w-full bg-blue-800 hover:bg-blue-900 text-yellow-300 dark:bg-yellow-400 dark:hover:bg-yellow-500 dark:text-blue-900">Se connecter</Button>
+                <Separator className="dark:bg-yellow-700" />
                 <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-3">Pas encore membre ?</p>
-                  <Button variant="outline" className="w-full">
+                  <p className="text-sm text-blue-700 dark:text-yellow-100 mb-3">Pas encore membre ?</p>
+                  <Button variant="outline" className="w-full border-yellow-400 text-blue-800 hover:bg-yellow-100 dark:border-yellow-600 dark:text-yellow-200 dark:hover:bg-yellow-900/50">
                     Créer un compte
                   </Button>
                 </div>
                 <div className="text-center">
-                  <Link to="#" className="text-sm text-blue-600 hover:underline">
+                  <Link to="#" className="text-sm text-blue-800 hover:underline dark:text-yellow-300 dark:hover:text-yellow-200">
                     Mot de passe oublié ?
                   </Link>
                 </div>
@@ -144,11 +143,11 @@ export default function Home() {
             {/* Upcoming Events Section */}
             <section id="evenements">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                  <Calendar className="h-6 w-6 text-blue-600" />
+                <h3 className="text-2xl font-bold text-blue-900 dark:text-yellow-300 flex items-center gap-2">
+                  <Calendar className="h-6 w-6 text-blue-800 dark:text-yellow-400" />
                   Événements à venir
                 </h3>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" className="text-blue-800 hover:bg-yellow-100 dark:text-yellow-200 dark:hover:bg-blue-900">
                   Voir tout
                   <ExternalLink className="h-4 w-4 ml-1" />
                 </Button>
@@ -156,117 +155,30 @@ export default function Home() {
 
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Event 1 */}
-                <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+                <Card className="overflow-hidden hover:shadow-lg transition-shadow bg-white dark:bg-blue-950/70 dark:border-yellow-700">
                   <div className="aspect-video relative">
                     <img
                       src="/placeholder.svg?height=200&width=400"
                       alt="Soirée d'intégration"
                       className="object-cover"
                     />
-                    <Badge className="absolute top-3 left-3 bg-red-500 hover:bg-red-500">Bientôt</Badge>
+                    <Badge className="absolute top-3 left-3 bg-red-500 hover:bg-red-500 text-white dark:bg-red-700 dark:hover:bg-red-700">Bientôt</Badge>
                   </div>
                   <CardContent className="p-4">
-                    <h4 className="font-semibold text-lg mb-2">Soirée d'Intégration 2024</h4>
-                    <div className="flex items-center text-sm text-gray-600 mb-2">
+                    <h4 className="font-semibold text-lg mb-2 text-blue-900 dark:text-yellow-300">Soirée d'Intégration 2024</h4>
+                    <div className="flex items-center text-sm text-blue-700 dark:text-yellow-100 mb-2">
                       <Calendar className="h-4 w-4 mr-1" />
                       Vendredi 15 Mars 2024
                     </div>
-                    <div className="flex items-center text-sm text-gray-600 mb-3">
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-3">
                       <MapPin className="h-4 w-4 mr-1" />
                       Salle des Fêtes - Campus Central
                     </div>
-                    <p className="text-sm text-gray-700 mb-4">
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
                       Rejoignez-nous pour une soirée inoubliable avec DJ, animations et surprises !
                     </p>
-                    <Button size="sm" className="w-full">
+                    <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800">
                       S'inscrire
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                {/* Event 2 */}
-                <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-video relative">
-                    <img
-                      src="/placeholder.svg?height=200&width=400"
-                      alt="Tournoi de sport"
-                      className="object-cover"
-                    />
-                    <Badge className="absolute top-3 left-3 bg-green-500 hover:bg-green-500">Ouvert</Badge>
-                  </div>
-                  <CardContent className="p-4">
-                    <h4 className="font-semibold text-lg mb-2">Tournoi Inter-Écoles</h4>
-                    <div className="flex items-center text-sm text-gray-600 mb-2">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      Samedi 23 Mars 2024
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600 mb-3">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      Complexe Sportif Universitaire
-                    </div>
-                    <p className="text-sm text-gray-700 mb-4">
-                      Compétition amicale de football, basketball et volleyball entre écoles.
-                    </p>
-                    <Button size="sm" className="w-full">
-                      Participer
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                {/* Event 3 */}
-                <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-video relative">
-                    <img
-                      src="/placeholder.svg?height=200&width=400"
-                      alt="Conférence carrière"
-                      className="object-cover"
-                    />
-                    <Badge className="absolute top-3 left-3 bg-blue-500 hover:bg-blue-500">Gratuit</Badge>
-                  </div>
-                  <CardContent className="p-4">
-                    <h4 className="font-semibold text-lg mb-2">Conférence Carrière</h4>
-                    <div className="flex items-center text-sm text-gray-600 mb-2">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      Mercredi 28 Mars 2024
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600 mb-3">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      Amphithéâtre A - Bâtiment Principal
-                    </div>
-                    <p className="text-sm text-gray-700 mb-4">
-                      Rencontrez des professionnels et découvrez les opportunités de carrière.
-                    </p>
-                    <Button size="sm" className="w-full">
-                      Réserver
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                {/* Event 4 */}
-                <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-video relative">
-                    <img
-                      src="/placeholder.svg?height=200&width=400"
-                      alt="Voyage étudiant"
-                      className="object-cover"
-                    />
-                    <Badge className="absolute top-3 left-3 bg-purple-500 hover:bg-purple-500">Populaire</Badge>
-                  </div>
-                  <CardContent className="p-4">
-                    <h4 className="font-semibold text-lg mb-2">Voyage à Prague</h4>
-                    <div className="flex items-center text-sm text-gray-600 mb-2">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      5-8 Avril 2024
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600 mb-3">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      Prague, République Tchèque
-                    </div>
-                    <p className="text-sm text-gray-700 mb-4">
-                      Découvrez la magnifique capitale tchèque avec vos camarades étudiants.
-                    </p>
-                    <Button size="sm" className="w-full">
-                      Plus d'infos
                     </Button>
                   </CardContent>
                 </Card>
@@ -275,69 +187,69 @@ export default function Home() {
 
             {/* Important Links Section */}
             <section>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                <ExternalLink className="h-6 w-6 text-blue-600" />
+              <h3 className="text-2xl font-bold text-blue-900 dark:text-yellow-300 mb-6 flex items-center gap-2">
+                <ExternalLink className="h-6 w-6 text-blue-800 dark:text-yellow-400" />
                 Liens Importants
               </h3>
 
               <div className="grid md:grid-cols-2 gap-4">
-                <Card className="p-4 hover:shadow-md transition-shadow">
+                <Card className="p-4 hover:shadow-md transition-shadow bg-white dark:bg-blue-950/70 dark:border-yellow-700">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-semibold">Plateforme Étudiante</h4>
-                      <p className="text-sm text-gray-600">Accès aux cours et ressources</p>
+                      <h4 className="font-semibold dark:text-white">Plateforme Étudiante</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Accès aux cours et ressources</p>
                     </div>
-                    <ExternalLink className="h-5 w-5 text-gray-400" />
+                    <ExternalLink className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                   </div>
                 </Card>
 
-                <Card className="p-4 hover:shadow-md transition-shadow">
+                <Card className="p-4 hover:shadow-md transition-shadow bg-white dark:bg-blue-950/70 dark:border-yellow-700">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-semibold">Bibliothèque Universitaire</h4>
-                      <p className="text-sm text-gray-600">Catalogue et réservations</p>
+                      <h4 className="font-semibold dark:text-white">Bibliothèque Universitaire</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Catalogue et réservations</p>
                     </div>
-                    <ExternalLink className="h-5 w-5 text-gray-400" />
+                    <ExternalLink className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                   </div>
                 </Card>
 
-                <Card className="p-4 hover:shadow-md transition-shadow">
+                <Card className="p-4 hover:shadow-md transition-shadow bg-white dark:bg-blue-950/70 dark:border-yellow-700">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-semibold">Service Scolarité</h4>
-                      <p className="text-sm text-gray-600">Démarches administratives</p>
+                      <h4 className="font-semibold dark:text-white">Service Scolarité</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Démarches administratives</p>
                     </div>
-                    <ExternalLink className="h-5 w-5 text-gray-400" />
+                    <ExternalLink className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                   </div>
                 </Card>
 
-                <Card className="p-4 hover:shadow-md transition-shadow">
+                <Card className="p-4 hover:shadow-md transition-shadow bg-white dark:bg-blue-950/70 dark:border-yellow-700">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-semibold">CROUS</h4>
-                      <p className="text-sm text-gray-600">Bourses et logement</p>
+                      <h4 className="font-semibold dark:text-white">CROUS</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Bourses et logement</p>
                     </div>
-                    <ExternalLink className="h-5 w-5 text-gray-400" />
+                    <ExternalLink className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                   </div>
                 </Card>
 
-                <Card className="p-4 hover:shadow-md transition-shadow">
+                <Card className="p-4 hover:shadow-md transition-shadow bg-white dark:bg-blue-950/70 dark:border-yellow-700">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-semibold">Emploi du Temps</h4>
-                      <p className="text-sm text-gray-600">Planning des cours</p>
+                      <h4 className="font-semibold dark:text-white">Emploi du Temps</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Planning des cours</p>
                     </div>
-                    <ExternalLink className="h-5 w-5 text-gray-400" />
+                    <ExternalLink className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                   </div>
                 </Card>
 
-                <Card className="p-4 hover:shadow-md transition-shadow">
+                <Card className="p-4 hover:shadow-md transition-shadow bg-white dark:bg-blue-950/70 dark:border-yellow-700">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-semibold">Forum Étudiant</h4>
-                      <p className="text-sm text-gray-600">Discussions et entraide</p>
+                      <h4 className="font-semibold dark:text-white">Forum Étudiant</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Discussions et entraide</p>
                     </div>
-                    <ExternalLink className="h-5 w-5 text-gray-400" />
+                    <ExternalLink className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                   </div>
                 </Card>
               </div>
@@ -366,13 +278,13 @@ export default function Home() {
                 culturelles et sportives pour enrichir la vie universitaire.
               </p>
               <div className="flex space-x-4">
-                <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white">
+                <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white dark:hover:bg-gray-800">
                   <Facebook className="h-5 w-5" />
                 </Button>
-                <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white">
+                <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white dark:hover:bg-gray-800">
                   <Instagram className="h-5 w-5" />
                 </Button>
-                <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white">
+                <Button size="sm" variant="ghost" className="text-gray-400 hover:text-white dark:hover:bg-gray-800">
                   <Twitter className="h-5 w-5" />
                 </Button>
               </div>
