@@ -23,7 +23,9 @@ class Link(models.Model):
         max_length=255, verbose_name="URL", help_text="URL de la ressource"
     )
     is_active: bool = models.BooleanField(
-        default=True, verbose_name="Actif", help_text="Si la ressource est active"
+        default=True,
+        verbose_name="Actif",
+        help_text="Si la ressource est active (visible sur le site)",
     )
     created_at: datetime = models.DateTimeField(
         auto_now_add=True,
