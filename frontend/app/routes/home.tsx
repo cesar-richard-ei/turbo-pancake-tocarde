@@ -96,16 +96,21 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl md:text-6xl font-bold text-royal-blue-900 mb-6">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-royal-blue-700 to-gold-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-royal-blue-700 to-gold-500">
                 La Tocarde
               </span>
               {" "}vous souhaite le bonsoir !
             </h2>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-royal-blue-800 hover:bg-royal-blue-900 text-gold-300">
-                S'inscrire
-              </Button>
-            </div>
+            {!isAuthenticated && (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link to="/signup">
+                  <Button size="lg" className="bg-royal-blue-800 hover:bg-royal-blue-900 text-gold-300">
+                    S'inscrire
+                  </Button>
+                </Link>
+              </div>
+            )}
+            
           </div>
         </div>
       </section>
@@ -166,9 +171,11 @@ export default function Home() {
                     <p className="text-sm text-gray-700 mb-4">
                       Rejoignez-nous pour une soirée inoubliable avec DJ, animations et surprises !
                     </p>
-                    <Button size="sm" className="w-full bg-royal-blue-600 hover:bg-royal-blue-700">
-                      S'inscrire
-                    </Button>
+                    <Link to="/signup">
+                      <Button size="sm" className="w-full bg-royal-blue-600 hover:bg-royal-blue-700">
+                        S'inscrire
+                      </Button>
+                    </Link>
                   </CardContent>
                 </Card>
               </div>
