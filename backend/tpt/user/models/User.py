@@ -53,7 +53,7 @@ class User(AbstractUser):
         verbose_name="A un véhicule",
         help_text="Si vous avez un véhicule pour transporter des personnes.",
     )
-    car_seats: int = models.IntegerField(
+    car_seats: int = models.PositiveSmallIntegerField(
         default=1,
         verbose_name="Nombre de places dans le véhicule",
         help_text="Nombre de places disponibles (conducteur inclus)",
@@ -64,7 +64,7 @@ class User(AbstractUser):
         verbose_name="Peut accueillir des personnes",
         help_text="Si vous avez un domicile avec des lits disponibles.",
     )
-    home_available_beds: int = models.IntegerField(
+    home_available_beds: int = models.PositiveSmallIntegerField(
         default=1,
         verbose_name="Nombre de lits disponibles",
         help_text="Nombre de lits disponibles pour les personnes hébergées",
