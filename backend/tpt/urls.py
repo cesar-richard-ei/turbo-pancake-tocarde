@@ -3,7 +3,7 @@ from django.urls import path, include
 from django.http import HttpResponse
 from django.conf import settings
 from django.conf.urls.static import static
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
+from drf_spectacular.views import SpectacularRedocView
 
 
 def health_check(request):
@@ -17,11 +17,10 @@ urlpatterns = [
     path('api/accounts/', include('allauth.urls')),
     path("api/_allauth/", include("allauth.headless.urls")),
     path("api/user/", include("tpt.user.urls")),
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path(
-        'api/schema/redoc/',
+        'api/schema/',
         SpectacularRedocView.as_view(url_name='schema'),
-        name='redoc'
+        name='schema'
     ),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
