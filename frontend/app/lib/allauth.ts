@@ -102,6 +102,7 @@ export interface ApiResponse<T = any> {
   status: number;
   message?: string;
   data?: T;
+  errors?: { message: string }[];
   meta?: {
     is_authenticated?: boolean;
     session_token?: string;

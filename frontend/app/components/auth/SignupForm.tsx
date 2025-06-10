@@ -67,8 +67,8 @@ export function SignupForm() {
         }
       } else {
         // Gérer les erreurs de validation du formulaire
-        if (response.data?.errors) {
-          const errorMessages = Object.values(response.data.errors).flat();
+        if (response?.errors) {
+          const errorMessages = Object.values(response.errors).flat().map((msg) => msg.message);
           setError(errorMessages.join('. '));
         } else {
           setError(response.message || 'Une erreur s\'est produite lors de l\'inscription');
