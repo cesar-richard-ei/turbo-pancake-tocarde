@@ -17,6 +17,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'rest_framework',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
     'tpt.user',
     'allauth.account',
     'allauth.headless',
@@ -120,6 +123,12 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 50,
+}
+
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
@@ -148,4 +157,14 @@ HEADLESS_FRONTEND_URLS = {
     "account_confirm_email": "http://localhost:5173/api/accounts/verify-email/{key}",
     "account_reset_password_from_key": "http://localhost:5173/api/accounts/password/reset/key/{key}",
     "account_signup": "http://localhost:5173/api/accounts/signup",
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'FRANCE TOCARDE APIS',
+    'DESCRIPTION': 'API for the France Tocarde project',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_DIST': 'SIDECAR',
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
 }
