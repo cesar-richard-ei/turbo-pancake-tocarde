@@ -38,22 +38,28 @@ class UserAdmin(UserAdmin):
                 ),
             },
         ),
-        (_("Personal info"), {
-            "fields": (
-                "address",
-                "city",
-                "zip_code",
-                "country",
-                "phone_number",
-                "birth_date",
-            )
-        }),
-        (_("Faluche info"), {
-            "fields": (
-                "faluche_nickname",
-                "faluche_status",
-            )
-        }),
+        (
+            _("Personal info"),
+            {
+                "fields": (
+                    "address",
+                    "city",
+                    "zip_code",
+                    "country",
+                    "phone_number",
+                    "birth_date",
+                )
+            },
+        ),
+        (
+            _("Faluche info"),
+            {
+                "fields": (
+                    "faluche_nickname",
+                    "faluche_status",
+                )
+            },
+        ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
     add_fieldsets = (

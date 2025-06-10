@@ -6,83 +6,93 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('user', '0001_initial'),
+        ("user", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='address',
+            model_name="user",
+            name="address",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AddField(
-            model_name='user',
-            name='birth_date',
+            model_name="user",
+            name="birth_date",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='user',
-            name='can_host_peoples',
+            model_name="user",
+            name="can_host_peoples",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='user',
-            name='car_seats',
+            model_name="user",
+            name="car_seats",
             field=models.IntegerField(default=1),
         ),
         migrations.AddField(
-            model_name='user',
-            name='city',
+            model_name="user",
+            name="city",
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
         migrations.AddField(
-            model_name='user',
-            name='country',
+            model_name="user",
+            name="country",
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
         migrations.AddField(
-            model_name='user',
-            name='faluche_nickname',
+            model_name="user",
+            name="faluche_nickname",
             field=models.CharField(blank=True, max_length=150, null=True),
         ),
         migrations.AddField(
-            model_name='user',
-            name='faluche_status',
-            field=models.CharField(blank=True, choices=[('SYMPATHISANT', 'Sympathisant'), ('IMPETRANT', 'Impétrant'), ('BAPTISE', 'Baptisé'), ('OTHER', 'Autre folklore')], max_length=20, null=True),
+            model_name="user",
+            name="faluche_status",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("SYMPATHISANT", "Sympathisant"),
+                    ("IMPETRANT", "Impétrant"),
+                    ("BAPTISE", "Baptisé"),
+                    ("OTHER", "Autre folklore"),
+                ],
+                max_length=20,
+                null=True,
+            ),
         ),
         migrations.AddField(
-            model_name='user',
-            name='has_car',
+            model_name="user",
+            name="has_car",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='user',
-            name='home_available_beds',
+            model_name="user",
+            name="home_available_beds",
             field=models.IntegerField(default=1),
         ),
         migrations.AddField(
-            model_name='user',
-            name='home_rules',
+            model_name="user",
+            name="home_rules",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='user',
-            name='phone_number',
+            model_name="user",
+            name="phone_number",
             field=models.CharField(blank=True, max_length=14, null=True),
         ),
         migrations.AddField(
-            model_name='user',
-            name='zip_code',
+            model_name="user",
+            name="zip_code",
             field=models.CharField(blank=True, max_length=10, null=True),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='first_name',
+            model_name="user",
+            name="first_name",
             field=models.CharField(max_length=150),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='last_name',
+            model_name="user",
+            name="last_name",
             field=models.CharField(max_length=150),
         ),
     ]

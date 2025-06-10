@@ -9,6 +9,7 @@ class Link(models.Model):
     """
     A Link is a link for an external web resource.
     """
+
     name: str = models.CharField(max_length=255)
     description: str = models.TextField(null=True, blank=True)
     url: str = models.URLField(max_length=255)
