@@ -6,6 +6,31 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+
+  --color-royal-blue-50: hsl(225, 75%, 97%);
+  --color-royal-blue-100: hsl(222, 73%, 93%);
+  --color-royal-blue-200: hsl(221, 78%, 87%);
+  --color-royal-blue-300: hsl(219, 76%, 78%);
+  --color-royal-blue-400: hsl(221, 74%, 68%);
+  --color-royal-blue-500: hsl(225, 73%, 57%);
+  --color-royal-blue-600: hsl(229, 66%, 53%);
+  --color-royal-blue-700: hsl(232, 61%, 48%);
+  --color-royal-blue-800: hsl(234, 56%, 40%);
+  --color-royal-blue-900: hsl(232, 51%, 33%);
+  --color-royal-blue-950: hsl(234, 46%, 21%);
+
+  --color-gold-50: hsl(60, 100%, 95%);
+  --color-gold-100: hsl(61, 100%, 88%);
+  --color-gold-200: hsl(59, 100%, 76%);
+  --color-gold-300: hsl(57, 100%, 63%);
+  --color-gold-400: hsl(54, 100%, 53%);
+  --color-gold-500: hsl(51, 100%, 50%);
+  --color-gold-600: hsl(45, 100%, 41%);
+  --color-gold-700: hsl(41, 98%, 33%);
+  --color-gold-800: hsl(37, 86%, 29%);
+  --color-gold-900: hsl(34, 77%, 26%);
+  --color-gold-950: hsl(32, 89%, 14%);
 }
 
 html,
@@ -128,6 +153,7 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
