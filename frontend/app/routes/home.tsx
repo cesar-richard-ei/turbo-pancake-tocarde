@@ -16,7 +16,7 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export default function Home() {
-  const { isAuthenticated, user, isLoading } = useAuth();
+  const { isAuthenticated, user, isLoading, logout } = useAuth();
   const userData = user?.user || user;
 
   return (
@@ -52,12 +52,36 @@ export default function Home() {
             </nav>
             {/* Auth Buttons */}
             <div className="hidden md:flex items-center space-x-3">
-              <Button variant="ghost" size="sm" className="text-royal-blue-800 hover:bg-gold-100">
-                Connexion
-              </Button>
-              <Button size="sm" className="bg-gold-400 hover:bg-gold-500 text-royal-blue-900">
-                S'inscrire
-              </Button>
+              {isLoading ? (
+                <Button variant="ghost" size="sm" className="text-royal-blue-800" disabled>
+                  Chargement...
+                </Button>
+              ) : isAuthenticated ? (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-royal-blue-800 hover:bg-gold-100"
+                  onClick={async () => {
+                    await logout();
+                    // Optionnel: rediriger ou afficher un message après la déconnexion
+                  }}
+                >
+                  Déconnexion
+                </Button>
+              ) : (
+                <>
+                  <Link to="/login">
+                    <Button variant="ghost" size="sm" className="text-royal-blue-800 hover:bg-gold-100">
+                      Connexion
+                    </Button>
+                  </Link>
+                  <Link to="/signup">
+                    <Button size="sm" className="bg-gold-400 hover:bg-gold-500 text-royal-blue-900">
+                      S'inscrire
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
             {/* Mobile Menu Button */}
             <Button variant="ghost" size="sm" className="md:hidden text-royal-blue-800 hover:bg-gold-100">
