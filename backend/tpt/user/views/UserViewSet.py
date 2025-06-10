@@ -8,4 +8,4 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        return User.objects.all()
+        return User.objects.filter(is_active=True)

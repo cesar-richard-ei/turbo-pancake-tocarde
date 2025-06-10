@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'tpt.user',
+    'tpt.resources',
     'allauth.account',
     'allauth.headless',
     'allauth.usersessions',

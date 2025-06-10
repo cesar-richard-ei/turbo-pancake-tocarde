@@ -17,6 +17,7 @@ urlpatterns = [
     path('api/accounts/', include('allauth.urls')),
     path("api/_allauth/", include("allauth.headless.urls")),
     path("api/user/", include("tpt.user.urls")),
+    path("api/resources/", include("tpt.resources.urls")),
     path(
         'api/schema/',
         SpectacularRedocView.as_view(url_name='schema'),
