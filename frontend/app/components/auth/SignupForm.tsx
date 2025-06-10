@@ -33,11 +33,16 @@ export function SignupForm() {
     }
 
     try {
+      if (formData.password1 !== formData.password2) {
+        setError('Les mots de passe ne correspondent pas');
+        setIsLoading(false);
+        return;
+      }
+
       const response = await signUp({
         email: formData.email,
         username: formData.username,
-        password1: formData.password1,
-        password2: formData.password2,
+        password: formData.password1,
       });
 
       if (response.status === 200) {
