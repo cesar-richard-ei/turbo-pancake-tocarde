@@ -5,6 +5,7 @@ import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
 import { toast } from "sonner"
+import { useAuth } from "./AuthContext"
 
 interface ChangePasswordDialogProps {
   open: boolean
@@ -17,6 +18,8 @@ export default function ChangePasswordDialog({ open, onOpenChange }: ChangePassw
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
 
+  const { user } = useAuth()
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (newPassword !== confirmPassword) {
@@ -27,10 +30,8 @@ export default function ChangePasswordDialog({ open, onOpenChange }: ChangePassw
     try {
       setLoading(true)
       const resp = await changePassword({
-        old_password: oldPassword,
-        new_password1: newPassword,
-        new_password2: confirmPassword,
-      })
+        password: newPassword,
+      }, user?.user.id)
       if (resp.status === 200) {
         onOpenChange(false)
         toast.success("Mot de passe mis à jour")
