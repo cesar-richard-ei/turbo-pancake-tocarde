@@ -48,7 +48,7 @@ export const URLs = {
   CONFIG: '/config',
 
   // Account management
-  CHANGE_PASSWORD: '/account/password/change',
+  CHANGE_PASSWORD: '/api/user/users/',
   EMAIL: '/account/email',
   PROVIDERS: '/account/providers',
 
@@ -115,7 +115,7 @@ function postForm(action: string, data: Record<string, string>) {
     console.error('postForm ne peut être utilisé que côté client');
     return;
   }
-  
+
   const f = document.createElement('form')
   f.method = 'POST'
   f.action = settings.baseUrl + action
@@ -157,16 +157,16 @@ export function getSessionToken(): string | null {
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
 async function request<T = any>(
-  method: HttpMethod, 
-  path: string, 
-  data?: any, 
+  method: HttpMethod,
+  path: string,
+  data?: any,
   headers: Record<string, string> = {}
 ): Promise<ApiResponse<T>> {
   if (typeof window === 'undefined') {
     console.error('request ne peut être utilisé que côté client');
     return { status: 500, message: 'API non disponible côté serveur' };
   }
-  
+
   const options: RequestInit = {
     method,
     headers: {
@@ -175,7 +175,7 @@ async function request<T = any>(
     },
     credentials: settings.withCredentials ? 'include' as RequestCredentials : undefined
   }
-  
+
   if (path !== URLs.CONFIG) {
     if (settings.client === Client.BROWSER) {
       const csrfToken = getCSRFToken();
@@ -195,10 +195,10 @@ async function request<T = any>(
     options.body = JSON.stringify(data);
     (options.headers as Record<string, string>)['Content-Type'] = 'application/json';
   }
-  
+
   const resp = await fetch(settings.baseUrl + path, options);
   const msg = await resp.json() as ApiResponse<T>;
-  
+
   if (msg.status === 410) {
     tokenStorage.removeItem('sessionToken');
   }
@@ -340,8 +340,32 @@ export async function resetPassword(data: Record<string, any>): Promise<ApiRespo
   return await request('POST', URLs.RESET_PASSWORD, data);
 }
 
-export async function changePassword(data: Record<string, any>): Promise<ApiResponse> {
-  return await request('POST', URLs.CHANGE_PASSWORD, data);
+export async function changePassword(data: Record<string, any>, id: number): Promise<ApiResponse> {
+  const options: RequestInit = {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+    headers: {
+      ...ACCEPT_JSON,
+      'Content-Type': 'application/json'
+    },
+    credentials: settings.withCredentials ? 'include' as RequestCredentials : undefined
+  }
+
+  if (settings.client === Client.BROWSER) {
+    const csrfToken = getCSRFToken();
+    if (csrfToken) {
+      (options.headers as Record<string, string>)['X-CSRFToken'] = csrfToken;
+    }
+  } else if (settings.client === Client.APP) {
+    (options.headers as Record<string, string>)['User-Agent'] = 'django-allauth example app';
+    const sessionToken = getSessionToken();
+    if (sessionToken) {
+      (options.headers as Record<string, string>)['X-Session-Token'] = sessionToken;
+    }
+  }
+  return await fetch(`${URLs.CHANGE_PASSWORD}${id}/`, {
+    ...options
+  });
 }
 
 export async function getAuth(): Promise<ApiResponse> {
@@ -349,8 +373,8 @@ export async function getAuth(): Promise<ApiResponse> {
 }
 
 export async function authenticateByToken(
-  providerId: string, 
-  token: string, 
+  providerId: string,
+  token: string,
   process: AuthProcessType = AuthProcess.LOGIN
 ): Promise<ApiResponse> {
   return await request('POST', URLs.PROVIDER_TOKEN, {
@@ -361,15 +385,15 @@ export async function authenticateByToken(
 }
 
 export function redirectToProvider(
-  providerId: string, 
-  callbackURL: string, 
+  providerId: string,
+  callbackURL: string,
   process: AuthProcessType = AuthProcess.LOGIN
 ): void {
   if (typeof window === 'undefined') {
     console.error('redirectToProvider ne peut être utilisé que côté client');
     return;
   }
-  
+
   postForm(URLs.REDIRECT_TO_PROVIDER, {
     provider: providerId,
     process,

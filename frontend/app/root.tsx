@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
 } from "react-router";
 import { AuthProvider } from "./components/auth/AuthContext";
+import { Toaster } from "sonner";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -34,7 +35,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <AuthProvider> {/* AuthProvider englobe maintenant les enfants du Layout */}
+          {children}
+        </AuthProvider>
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -43,11 +47,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return (
-    <AuthProvider>
-      <Outlet />
-    </AuthProvider>
-  );
+  return <Outlet />; // App retourne maintenant directement Outlet
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

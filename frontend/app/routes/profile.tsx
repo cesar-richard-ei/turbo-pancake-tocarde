@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { Route } from "./+types/profile";
 import { NavBar } from "../components/NavBar";
 import { useAuth } from "../components/auth/AuthContext";
 import { Navigate } from 'react-router';
+import ChangePasswordDialog from '../components/auth/ChangePasswordDialog';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -15,6 +16,7 @@ export default function Profile() {
   const { isAuthenticated, user, isLoading, refreshUser } = useAuth();
   // Utiliser une ref pour éviter les boucles infinies
   const initialLoadDone = useRef(false);
+  const [openChange, setOpenChange] = useState(false);
 
   // Déboguer les données de l'utilisateur
   console.log('Données utilisateur:', user);
@@ -42,6 +44,7 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-gray-50">
       <NavBar />
+      <ChangePasswordDialog open={openChange} onOpenChange={setOpenChange} />
       
       <main className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         {isLoading ? (
@@ -59,12 +62,20 @@ export default function Profile() {
                   Informations personnelles et préférences
                 </p>
               </div>
-              <button
-                onClick={handleRefresh}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                Rafraîchir les données
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleRefresh}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Rafraîchir les données
+                </button>
+                <button
+                  onClick={() => setOpenChange(true)}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                >
+                  Changer de mot de passe
+                </button>
+              </div>
             </div>
             <div className="border-t border-gray-200">
               <dl>

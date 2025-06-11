@@ -57,17 +57,21 @@ export default function Home() {
                   Chargement...
                 </Button>
               ) : isAuthenticated ? (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-royal-blue-800 hover:bg-gold-100"
-                  onClick={async () => {
-                    await logout();
-                    // Optionnel: rediriger ou afficher un message après la déconnexion
-                  }}
-                >
-                  Déconnexion
-                </Button>
+                <>
+                  <Link to="/profile">
+                    <Badge variant="secondary">Mon profil</Badge>
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-royal-blue-800 hover:bg-gold-100"
+                    onClick={async () => {
+                      await logout();
+                    }}
+                  >
+                    Déconnexion
+                  </Button>
+                </>
               ) : (
                 <>
                   <Link to="/login">
