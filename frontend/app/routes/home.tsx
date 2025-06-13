@@ -7,6 +7,7 @@ import { Card, CardContent } from '~/components/ui/card';
 import { Badge } from '~/components/ui/badge';
 import { Separator } from '~/components/ui/separator';
 import { ImportantLink } from "~/components/ImportantLink";
+import importantLinks from "~/data/importantLinks.json";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -130,8 +131,14 @@ export default function Home() {
               </h3>
 
               <div className="grid md:grid-cols-1 gap-4">
-                <ImportantLink title="Faluche.app" description="Informations sur la faluche au global" url="https://faluche.app" />
-                <ImportantLink title="Code amienois" description="Informations sur les copains au nord" url="https://code-amienois.app" />
+                {importantLinks.map((link) => (
+                  <ImportantLink
+                    key={link.url}
+                    title={link.title}
+                    description={link.description}
+                    url={link.url}
+                  />
+                ))}
               </div>
             </section>
           </div>
