@@ -6,83 +6,141 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('user', '0002_user_address_user_birth_date_user_can_host_peoples_and_more'),
+        ("user", "0002_user_address_user_birth_date_user_can_host_peoples_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='address',
-            field=models.CharField(blank=True, max_length=200, null=True, verbose_name='Adresse'),
+            model_name="user",
+            name="address",
+            field=models.CharField(
+                blank=True, max_length=200, null=True, verbose_name="Adresse"
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='birth_date',
-            field=models.DateField(blank=True, help_text="Date de naissance de l'utilisateur (format: JJ/MM/AAAA)", null=True, verbose_name='Date de naissance'),
+            model_name="user",
+            name="birth_date",
+            field=models.DateField(
+                blank=True,
+                help_text="Date de naissance de l'utilisateur (format: JJ/MM/AAAA)",
+                null=True,
+                verbose_name="Date de naissance",
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='can_host_peoples',
-            field=models.BooleanField(default=False, help_text='Si vous avez un domicile avec des lits disponibles.', verbose_name='Peut accueillir des personnes'),
+            model_name="user",
+            name="can_host_peoples",
+            field=models.BooleanField(
+                default=False,
+                help_text="Si vous avez un domicile avec des lits disponibles.",
+                verbose_name="Peut accueillir des personnes",
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='car_seats',
-            field=models.PositiveSmallIntegerField(default=1, help_text='Nombre de places disponibles (conducteur inclus)', verbose_name='Nombre de places dans le véhicule'),
+            model_name="user",
+            name="car_seats",
+            field=models.PositiveSmallIntegerField(
+                default=1,
+                help_text="Nombre de places disponibles (conducteur inclus)",
+                verbose_name="Nombre de places dans le véhicule",
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='city',
-            field=models.CharField(blank=True, max_length=100, null=True, verbose_name='Ville'),
+            model_name="user",
+            name="city",
+            field=models.CharField(
+                blank=True, max_length=100, null=True, verbose_name="Ville"
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='country',
-            field=models.CharField(blank=True, max_length=100, null=True, verbose_name='Pays'),
+            model_name="user",
+            name="country",
+            field=models.CharField(
+                blank=True, max_length=100, null=True, verbose_name="Pays"
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='faluche_nickname',
-            field=models.CharField(blank=True, help_text="Surnom de Faluche de l'utilisateur", max_length=150, null=True, verbose_name='Surnom de Fal'),
+            model_name="user",
+            name="faluche_nickname",
+            field=models.CharField(
+                blank=True,
+                help_text="Surnom de Faluche de l'utilisateur",
+                max_length=150,
+                null=True,
+                verbose_name="Surnom de Fal",
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='faluche_status',
-            field=models.CharField(blank=True, choices=[('SYMPATHISANT', 'Sympathisant'), ('IMPETRANT', 'Impétrant'), ('BAPTISE', 'Baptisé'), ('OTHER', 'Autre folklore')], help_text="Statut de Faluche de l'utilisateur", max_length=20, null=True, verbose_name='Statut de Faluche'),
+            model_name="user",
+            name="faluche_status",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("SYMPATHISANT", "Sympathisant"),
+                    ("IMPETRANT", "Impétrant"),
+                    ("BAPTISE", "Baptisé"),
+                    ("OTHER", "Autre folklore"),
+                ],
+                help_text="Statut de Faluche de l'utilisateur",
+                max_length=20,
+                null=True,
+                verbose_name="Statut de Faluche",
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='first_name',
-            field=models.CharField(max_length=150, verbose_name='Prénom'),
+            model_name="user",
+            name="first_name",
+            field=models.CharField(max_length=150, verbose_name="Prénom"),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='has_car',
-            field=models.BooleanField(default=False, help_text='Si vous avez un véhicule pour transporter des personnes.', verbose_name='A un véhicule'),
+            model_name="user",
+            name="has_car",
+            field=models.BooleanField(
+                default=False,
+                help_text="Si vous avez un véhicule pour transporter des personnes.",
+                verbose_name="A un véhicule",
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='home_available_beds',
-            field=models.PositiveSmallIntegerField(default=1, help_text='Nombre de lits disponibles pour les personnes hébergées', verbose_name='Nombre de lits disponibles'),
+            model_name="user",
+            name="home_available_beds",
+            field=models.PositiveSmallIntegerField(
+                default=1,
+                help_text="Nombre de lits disponibles pour les personnes hébergées",
+                verbose_name="Nombre de lits disponibles",
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='home_rules',
-            field=models.TextField(blank=True, help_text='Ex: Allergies, horraires, etc.', null=True, verbose_name='Règles du domicile'),
+            model_name="user",
+            name="home_rules",
+            field=models.TextField(
+                blank=True,
+                help_text="Ex: Allergies, horraires, etc.",
+                null=True,
+                verbose_name="Règles du domicile",
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='last_name',
-            field=models.CharField(max_length=150, verbose_name='Nom'),
+            model_name="user",
+            name="last_name",
+            field=models.CharField(max_length=150, verbose_name="Nom"),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='phone_number',
-            field=models.CharField(blank=True, help_text="Numéro de téléphone de l'utilisateur", max_length=14, null=True, verbose_name='Numéro de téléphone'),
+            model_name="user",
+            name="phone_number",
+            field=models.CharField(
+                blank=True,
+                help_text="Numéro de téléphone de l'utilisateur",
+                max_length=14,
+                null=True,
+                verbose_name="Numéro de téléphone",
+            ),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='zip_code',
-            field=models.CharField(blank=True, max_length=10, null=True, verbose_name='Code postal'),
+            model_name="user",
+            name="zip_code",
+            field=models.CharField(
+                blank=True, max_length=10, null=True, verbose_name="Code postal"
+            ),
         ),
     ]

@@ -8,6 +8,8 @@ DEBUG = os.getenv("TPT_DJANGO_DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.getenv("TPT_DJANGO_ALLOWED_HOSTS", "*").split(",")
 
+BASE_URL = os.getenv("BASE_URL", "http://localhost:5173")
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -116,7 +118,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Configuration SSL pour proxy
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 CSRF_TRUSTED_ORIGINS = os.getenv(
-    "TPT_CSRF_TRUSTED_ORIGINS", "https://tocarde.fr"
+    "TPT_CSRF_TRUSTED_ORIGINS", BASE_URL
 ).split(",")
 SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = True
@@ -153,10 +155,13 @@ SOCIALACCOUNT_PROVIDERS = {
 HEADLESS_ONLY = True
 
 HEADLESS_FRONTEND_URLS = {
-    "account_confirm_email": "http://localhost:5173/api/accounts/verify-email/{key}",
-    "account_reset_password_from_key": "http://localhost:5173/api/accounts/password/reset/key/{key}",
-    "account_signup": "http://localhost:5173/api/accounts/signup",
+    "account_confirm_email": f"{BASE_URL}/api/accounts/verify-email/" + "{key}",
+    "account_reset_password_from_key": f"{BASE_URL}/api/accounts/password"
+    + "/reset/key/{key}",
+    "account_signup": f"{BASE_URL}/api/accounts/signup",
+    "socialaccount_login_error": f"{BASE_URL}/api/account/provider/callback/" + "{key}",
 }
+
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "FRANCE TOCARDE APIS",

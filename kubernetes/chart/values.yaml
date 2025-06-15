@@ -10,9 +10,9 @@ ingress:
 
 configMap:
   TPT_DJANGO_DEBUG: "True"
-  TPT_BASE_URL: "/"
-  LOG_LEVEL: "WARNING"
-  DJANGO_ALLOWED_HOSTS: "*"
+  BASE_URL: "https://tocarde.fr"
+  LOG_LEVEL: "INFO"
+  DJANGO_ALLOWED_HOSTS: "https://tocarde.fr"
 
 volumes:
   postgres:
