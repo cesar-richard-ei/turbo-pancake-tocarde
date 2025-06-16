@@ -8,7 +8,8 @@ import { Card, CardContent } from '~/components/ui/card';
 import { Badge } from '~/components/ui/badge';
 import { Separator } from '~/components/ui/separator';
 import { ImportantLink } from "~/components/ImportantLink";
-import importantLinks from "~/data/importantLinks.json";
+import { useQuery } from "@tanstack/react-query";
+import { fetchLinks } from "~/lib/resources";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -21,6 +22,10 @@ export default function Home() {
   const { isAuthenticated, user, isLoading, logout } = useAuth();
   const userData = user?.user || user;
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data: importantLinks = [], isLoading: linksLoading } = useQuery({
+    queryKey: ["important-links"],
+    queryFn: fetchLinks,
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-royal-blue-100 to-gold-50">
@@ -187,11 +192,12 @@ export default function Home() {
               </h3>
 
               <div className="grid md:grid-cols-1 gap-4">
-                {importantLinks.map((link) => (
+                {linksLoading && <p>Chargement...</p>}
+                {!linksLoading && importantLinks.map((link) => (
                   <ImportantLink
-                    key={link.url}
-                    title={link.title}
-                    description={link.description}
+                    key={link.id}
+                    title={link.name}
+                    description={link.description || ''}
                     url={link.url}
                   />
                 ))}
