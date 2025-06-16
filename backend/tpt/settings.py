@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "drf_spectacular_sidecar",
     "tpt.user",
     "tpt.resources",
+    "tpt.event",
     "allauth.account",
     "allauth.headless",
     "allauth.usersessions",
@@ -50,7 +51,10 @@ ROOT_URLCONF = "tpt.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "templates"), os.path.join(BASE_DIR, "tpt", "templates")],
+        "DIRS": [
+            os.path.join(BASE_DIR, "templates"),
+            os.path.join(BASE_DIR, "tpt", "templates"),
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -118,9 +122,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Configuration SSL pour proxy
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-CSRF_TRUSTED_ORIGINS = os.getenv(
-    "TPT_CSRF_TRUSTED_ORIGINS", BASE_URL
-).split(",")
+CSRF_TRUSTED_ORIGINS = os.getenv("TPT_CSRF_TRUSTED_ORIGINS", BASE_URL).split(",")
 SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
