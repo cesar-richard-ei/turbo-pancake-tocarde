@@ -18,6 +18,7 @@ urlpatterns = (
         path("api/accounts/", include("allauth.urls")),
         path("api/_allauth/", include("allauth.headless.urls")),
         path("api/user/", include("tpt.user.urls")),
+        path("api/event/", include("tpt.event.urls")),
         path("api/resources/", include("tpt.resources.urls")),
         path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
         path(
