@@ -12,6 +12,13 @@ class UserAdmin(UserAdmin):
         "email",
         "first_name",
         "last_name",
+        "faluche_nickname",
+        "has_car",
+        "faluche_status",
+        "car_seats",
+        "can_host_peoples",
+        "home_available_beds",
+        "home_rules",
         "is_staff",
         "is_active",
     )
@@ -60,8 +67,28 @@ class UserAdmin(UserAdmin):
                 )
             },
         ),
+        (
+            _("Hebergement"),
+            {
+                "fields": (
+                    "can_host_peoples",
+                    "home_available_beds",
+                    "home_rules",
+                )
+            },
+        ),
+        (
+            _("Vehicule"),
+            {
+                "fields": (
+                    "has_car",
+                    "car_seats",
+                )
+            },
+        ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
+
     add_fieldsets = (
         (
             None,
@@ -77,9 +104,10 @@ class UserAdmin(UserAdmin):
             },
         ),
     )
+
     search_fields = ("email", "first_name", "last_name")
-    ordering = ("email",)
-    # filter_horizontal = ("groups", "user_permissions")
+    ordering = ("last_name", "first_name", "email")
+    list_filter = ("faluche_status", "has_car", "can_host_peoples")
 
     def has_module_permission(self, request: HttpRequest) -> bool:
         return request.user.is_superuser or request.user.is_staff

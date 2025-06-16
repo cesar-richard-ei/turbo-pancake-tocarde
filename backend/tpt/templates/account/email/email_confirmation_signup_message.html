@@ -1,0 +1,22 @@
+{% load account %}
+{% load i18n %}
+{% autoescape off %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% blocktrans %}Confirmation d'inscription sur {{ site_name }}{% endblocktrans %}</title>
+</head>
+<body>
+    <p>{% blocktrans %}Bonjour,{% endblocktrans %}</p>
+    
+    <p>{% blocktrans %}Vous recevez ce message car un utilisateur a utilisé cette adresse email pour s'inscrire sur {{ site_name }}.{% endblocktrans %}</p>
+    
+    <p>{% blocktrans %}Pour confirmer que cette adresse vous appartient, veuillez cliquer sur le lien suivant :{% endblocktrans %}</p>
+    
+    <p><a href="{{ activate_url }}">{{ activate_url }}</a></p>
+    
+    <p>{% blocktrans %}Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer ce message.{% endblocktrans %}</p>
+</body>
+</html>
+{% endautoescape %} 

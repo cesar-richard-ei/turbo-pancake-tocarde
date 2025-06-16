@@ -16,3 +16,16 @@ function getCookie (name) {
 export function getCSRFToken () {
     return getCookie('csrftoken')
 }
+
+export const URLs = {
+    CURRENT_USER: '/api/user/users/me/',
+    USER: '/api/user/users/',
+}
+
+export function getUser() {
+    return fetch(URLs.CURRENT_USER, {
+        headers: {
+            'X-CSRFToken': getCSRFToken()
+        }
+    })
+}

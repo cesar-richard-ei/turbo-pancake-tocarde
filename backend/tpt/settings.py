@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_extensions",
     "corsheaders",
     "rest_framework",
     "drf_spectacular",
@@ -49,7 +50,7 @@ ROOT_URLCONF = "tpt.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates"), os.path.join(BASE_DIR, "tpt", "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -77,18 +78,18 @@ DATABASES = {
 
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    # {
+    #     "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    # },
+    # {
+    #     "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    # },
+    # {
+    #     "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    # },
+    # {
+    #     "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    # },
 ]
 
 LANGUAGE_CODE = "fr-fr"
@@ -155,11 +156,10 @@ SOCIALACCOUNT_PROVIDERS = {
 HEADLESS_ONLY = True
 
 HEADLESS_FRONTEND_URLS = {
-    "account_confirm_email": f"{BASE_URL}/api/accounts/verify-email/" + "{key}",
-    "account_reset_password_from_key": f"{BASE_URL}/api/accounts/password"
-    + "/reset/key/{key}",
-    "account_signup": f"{BASE_URL}/api/accounts/signup",
-    "socialaccount_login_error": f"{BASE_URL}/api/account/provider/callback/" + "{key}",
+    "account_confirm_email": f"{BASE_URL}/verify-email/" + "{key}",
+    "account_reset_password_from_key": f"{BASE_URL}/reset-password/" + "{key}/{uid}",
+    "account_signup": f"{BASE_URL}/signup",
+    "socialaccount_login_error": f"{BASE_URL}/login-error",
 }
 
 
@@ -172,3 +172,10 @@ SPECTACULAR_SETTINGS = {
     "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
     "REDOC_DIST": "SIDECAR",
 }
+
+EMAIL_HOST = "mailhog"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+DEFAULT_FROM_EMAIL = "no-reply@tocarde.fr"
+EMAIL_PORT = 1025
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False

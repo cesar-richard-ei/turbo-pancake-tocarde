@@ -1,0 +1,13 @@
+{% load account %}
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans %}Bonjour,
+
+Vous recevez ce message car un utilisateur a utilisé cette adresse email pour s'inscrire sur {{ site_name }}.
+
+Pour confirmer que cette adresse vous appartient, veuillez cliquer sur le lien suivant :
+{{ activate_url }}
+
+Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer ce message.
+{% endblocktrans %}
+{% endautoescape %} 

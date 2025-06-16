@@ -39,5 +39,11 @@ services:
         condition: service_healthy
     command: python manage.py runserver 0.0.0.0:8000
 
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
 volumes:
   pgdata:
