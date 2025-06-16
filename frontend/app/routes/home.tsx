@@ -3,6 +3,7 @@ import { useAuth } from "../components/auth/AuthContext";
 import { Link } from 'react-router';
 import { Button } from '~/components/ui/button';
 import { Calendar, ExternalLink, Mail, MapPin, Menu } from 'lucide-react';
+import { useState } from 'react';
 import { Card, CardContent } from '~/components/ui/card';
 import { Badge } from '~/components/ui/badge';
 import { Separator } from '~/components/ui/separator';
@@ -19,6 +20,7 @@ export function meta({ }: Route.MetaArgs) {
 export default function Home() {
   const { isAuthenticated, user, isLoading, logout } = useAuth();
   const userData = user?.user || user;
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-royal-blue-100 to-gold-50">
@@ -89,12 +91,66 @@ export default function Home() {
               )}
             </div>
             {/* Mobile Menu Button */}
-            <Button variant="ghost" size="sm" className="md:hidden text-royal-blue-800 hover:bg-gold-100">
-              <Menu className="h-5 w-5" />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="md:hidden text-royal-blue-800 hover:bg-gold-100"
+            onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
         </div>
-      </header>
+        {isMobileMenuOpen && (
+          <nav className="md:hidden mt-4 space-y-2">
+            <Link to="#accueil" className="block text-royal-blue-800 hover:text-gold-500">
+              Accueil
+            </Link>
+            <Link to="#evenements" className="block text-royal-blue-800 hover:text-gold-500">
+              Événements
+            </Link>
+            <Link to="#apropos" className="block text-royal-blue-800 hover:text-gold-500">
+              À propos
+            </Link>
+            <Link to="#contact" className="block text-royal-blue-800 hover:text-gold-500">
+              Contact
+            </Link>
+            <div className="pt-2 border-t border-gold-200 space-y-2">
+              {isLoading ? (
+                <Button variant="ghost" size="sm" className="w-full" disabled>
+                  Chargement...
+                </Button>
+              ) : isAuthenticated ? (
+                <>
+                  <Link to="/profile" className="block text-royal-blue-800 hover:text-gold-500">
+                    Mon profil
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-royal-blue-800 hover:bg-gold-100 w-full"
+                    onClick={async () => {
+                      await logout();
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Déconnexion
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="block text-royal-blue-800 hover:text-gold-500">
+                    Connexion
+                  </Link>
+                  <Link to="/signup" className="block text-royal-blue-800 hover:text-gold-500">
+                    S'inscrire
+                  </Link>
+                </>
+              )}
+            </div>
+          </nav>
+        )}
+      </div>
+    </header>
 
       {/* Hero Section */}
       <section className="py-12 md:py-20">
