@@ -101,7 +101,7 @@ export default function Home() {
           </Button>
         </div>
         {isMobileMenuOpen && (
-          <nav className="md:hidden mt-4 space-y-2">
+          <nav className="md:hidden mt-4 space-y-2 animate-in slide-in-from-top-4 duration-300">
             <Link to="#accueil" className="block text-royal-blue-800 hover:text-gold-500">
               Accueil
             </Link>
