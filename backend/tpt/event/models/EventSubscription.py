@@ -44,8 +44,8 @@ class EventSubscription(models.Model):
     )
 
     class Meta:
-        verbose_name = "Événement"
-        verbose_name_plural = "Événements"
+        verbose_name = "Inscription"
+        verbose_name_plural = "Inscriptions"
         ordering = ["event", "user"]
         unique_together = ["event", "user"]
 

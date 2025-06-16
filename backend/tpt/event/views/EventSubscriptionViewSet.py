@@ -9,6 +9,3 @@ class EventSubscriptionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return EventSubscription.objects.filter(is_active=True)
-
-    def get_serializer_class(self):
-        return EventSubscriptionSerializer

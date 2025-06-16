@@ -10,6 +10,8 @@ class EventAdmin(admin.ModelAdmin):
         "name",
         "description",
         "location",
+        "start_date",
+        "end_date",
         "is_active",
         "created_at",
         "updated_at",
@@ -44,3 +46,10 @@ class EventSubscriptionAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
     )
+    list_filter = ("is_active",)
+    readonly_fields = ("created_at", "updated_at")
+    search_fields = ("event", "user")
+    ordering = ("event", "user")
+
+    def has_module_permission(self, request: HttpRequest) -> bool:
+        return request.user.is_superuser or request.user.is_staff
