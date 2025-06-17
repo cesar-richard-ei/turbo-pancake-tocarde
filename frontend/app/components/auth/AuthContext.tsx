@@ -3,7 +3,6 @@ import type { ReactNode } from 'react';
 import { getAuth, logout } from '../../lib/allauth';
 
 interface User {
-  username: string;
   email: string;
   [key: string]: any;
 }

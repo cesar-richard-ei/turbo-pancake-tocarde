@@ -42,7 +42,7 @@ export function NavBar() {
             ) : isAuthenticated ? (
               <>
                 <div className="mr-4 text-gray-700">
-                  Bienvenue, <span className="font-semibold">{userData?.username || userData?.display}</span> !
+                  Bienvenue, <span className="font-semibold">{userData?.email || userData?.display}</span> !
                 </div>
                 <div className="ml-3 relative">
                   <div>
@@ -55,7 +55,7 @@ export function NavBar() {
                     >
                       <span className="sr-only">Ouvrir le menu utilisateur</span>
                       <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                        {userData?.username?.charAt(0).toUpperCase() || 'U'}
+                        {userData?.email?.charAt(0).toUpperCase() || 'U'}
                       </div>
                     </button>
                   </div>
@@ -68,7 +68,7 @@ export function NavBar() {
                       tabIndex={-1}
                     >
                       <div className="block px-4 py-2 text-xs text-gray-400">
-                        Connecté en tant que <span className="font-bold">{userData?.username || userData?.display}</span>
+                        Connecté en tant que <span className="font-bold">{userData?.email || userData?.display}</span>
                       </div>
                       <Link
                         to="/profile"
@@ -177,11 +177,11 @@ export function NavBar() {
               <div className="flex items-center px-4">
                 <div className="flex-shrink-0">
                   <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                    {user?.username?.charAt(0).toUpperCase() || 'U'}
+                    {user?.email?.charAt(0).toUpperCase() || 'U'}
                   </div>
                 </div>
                 <div className="ml-3">
-                  <div className="text-base font-medium text-gray-800">{user?.username}</div>
+                  <div className="text-base font-medium text-gray-800">{user?.email}</div>
                   <div className="text-sm font-medium text-gray-500">{user?.email}</div>
                 </div>
               </div>

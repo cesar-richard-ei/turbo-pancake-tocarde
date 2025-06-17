@@ -6,7 +6,6 @@ import { GoogleAuthButton } from './GoogleAuthButton';
 export function SignupForm() {
   const [formData, setFormData] = useState({
     email: '',
-    username: '',
     password1: '',
     password2: '',
   });
@@ -41,7 +40,6 @@ export function SignupForm() {
 
       const response = await signUp({
         email: formData.email,
-        username: formData.username,
         password: formData.password1,
       });
 
@@ -113,21 +111,6 @@ export function SignupForm() {
             id="email"
             name="email"
             value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-            Nom d'utilisateur
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
             onChange={handleChange}
             required
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"

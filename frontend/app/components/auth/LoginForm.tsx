@@ -5,7 +5,7 @@ import { GoogleAuthButton } from './GoogleAuthButton';
 
 export function LoginForm() {
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +23,10 @@ export function LoginForm() {
     setError('');
 
     try {
-      const response = await login(formData);
+      const response = await login({
+        email: formData.email,
+        password: formData.password,
+      });
 
       if (response.status === 200 && response.meta?.is_authenticated) {
         // Obtenir les informations de l'utilisateur
@@ -58,14 +61,14 @@ export function LoginForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-            Nom d'utilisateur ou Email
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            Email
           </label>
           <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
             onChange={handleChange}
             required
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
