@@ -4,6 +4,7 @@ import { NavBar } from "../components/NavBar";
 import { useAuth } from "../components/auth/AuthContext";
 import { Navigate } from 'react-router';
 import ChangePasswordDialog from '../components/auth/ChangePasswordDialog';
+import EditProfileDialog from '../components/auth/EditProfileDialog';
 import { getFalucheStatus } from '~/lib/falucheStatus';
 
 export function meta({}: Route.MetaArgs) {
@@ -18,6 +19,7 @@ export default function Profile() {
   // Utiliser une ref pour éviter les boucles infinies
   const initialLoadDone = useRef(false);
   const [openChange, setOpenChange] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
 
   // Rafraîchir les données utilisateur une seule fois au chargement de la page
   useEffect(() => {
@@ -42,6 +44,7 @@ export default function Profile() {
     <div className="min-h-screen bg-gray-50">
       <NavBar />
       <ChangePasswordDialog open={openChange} onOpenChange={setOpenChange} />
+      <EditProfileDialog open={openEdit} onOpenChange={setOpenEdit} />
 
       <main className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         {isLoading ? (
@@ -65,6 +68,12 @@ export default function Profile() {
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   Rafraîchir les données
+                </button>
+                <button
+                  onClick={() => setOpenEdit(true)}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Modifier le profil
                 </button>
                 <button
                   onClick={() => setOpenChange(true)}
