@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { changePassword } from "../../lib/allauth"
+import { changePassword } from "~/lib/allauth"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
