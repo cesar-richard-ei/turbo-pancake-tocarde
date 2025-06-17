@@ -1,6 +1,6 @@
 # Valeurs par défaut
 environment: production
-namespace: tpt-production
+namespace: ft-production
 image:
   repository: ghcr.io/cesar-richard-ei/turbo-pancake-tocarde-backend
   tag: latest
@@ -9,7 +9,7 @@ ingress:
   host: tocarde.fr
 
 configMap:
-  TPT_DJANGO_DEBUG: "True"
+  FT_DJANGO_DEBUG: "True"
   BASE_URL: "https://tocarde.fr"
   LOG_LEVEL: "INFO"
   DJANGO_ALLOWED_HOSTS: "https://tocarde.fr"
@@ -28,10 +28,10 @@ nginx:
 postgres:
   image: postgres:17
   user: postgres
-  database: tpt
-  host: tpt-db
+  database: ft
+  host: ft-db
   port: 5432
-  password: tpt
+  password: ft
 
 pdb:
   maxUnavailable: 1

@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: tpt-gateway
+  name: ft-gateway
   namespace: {{ .Release.Namespace }}
   annotations:
     "helm.sh/hook": "pre-install,pre-upgrade"
@@ -26,12 +26,12 @@ spec:
         - "{{ .Values.ingress.host }}"
       tls:
         mode: SIMPLE
-        credentialName: tpt-tls
+        credentialName: ft-tls
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: tpt
+  name: ft
   namespace: {{ .Release.Namespace }}
   annotations:
     "helm.sh/hook": "pre-install,pre-upgrade"
@@ -40,7 +40,7 @@ spec:
   hosts:
     - "{{ .Values.ingress.host }}"
   gateways:
-    - tpt-gateway
+    - ft-gateway
   http:
     # API routes - Backend Django
     - match:
@@ -48,7 +48,7 @@ spec:
             prefix: /api
       route:
         - destination:
-            host: tpt-backend
+            host: ft-backend
             port:
               number: 8000
           headers:
@@ -59,6 +59,6 @@ spec:
     # Toutes les autres routes - Frontend React
     - route:
         - destination:
-            host: tpt-frontend
+            host: ft-frontend
             port:
               number: 80

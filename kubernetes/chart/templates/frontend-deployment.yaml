@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tpt-frontend
+  name: ft-frontend
   namespace: {{ .Release.Namespace }}
   annotations:
     secrets.infisical.com/auto-reload: "true"
@@ -9,7 +9,7 @@ spec:
   replicas: {{ .Values.frontend.replicas | int }}
   selector:
     matchLabels:
-      app: tpt-frontend
+      app: ft-frontend
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,14 +18,14 @@ spec:
   template:
     metadata:
       labels:
-        app: tpt-frontend
+        app: ft-frontend
         version: v1
       annotations:
         sidecar.istio.io/inject: "false"
     spec:
       imagePullSecrets:
         - name: ghcr-secret
-      serviceAccountName: tpt-service-account
+      serviceAccountName: ft-service-account
       securityContext:
         runAsNonRoot: true
         runAsUser: 101  # nginx user

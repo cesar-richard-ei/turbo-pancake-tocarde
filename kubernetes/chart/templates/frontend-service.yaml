@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: tpt-frontend
+  name: ft-frontend
   namespace: {{ .Release.Namespace }}
   labels:
-    app: tpt-frontend
+    app: ft-frontend
 spec:
   ports:
   - port: 80
     name: http
     targetPort: 80
   selector:
-    app: tpt-frontend
+    app: ft-frontend

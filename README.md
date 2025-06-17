@@ -60,7 +60,7 @@ Les variables d'environnement sont configurées dans le fichier `docker-compose.
 
 ```text
 ├── backend/           # Application Django
-│   ├── tpt/           # Code source du backend
+│   ├── ft/           # Code source du backend
 │   ├── requirements.txt
 │   └── Dockerfile
 ├── frontend/          # Application React

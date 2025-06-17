@@ -2,21 +2,21 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: tpt-service-account
+  name: ft-service-account
   namespace: "{{ .Values.namespace }}"
 
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: tpt-ci-account
+  name: ft-ci-account
   namespace: "{{ .Values.namespace }}"
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: tpt-role
+  name: ft-role
   namespace: "{{ .Values.namespace }}"
 rules:
   # Droits minimaux pour les pods
@@ -43,7 +43,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: tpt-ci-role
+  name: ft-ci-role
   namespace: "{{ .Values.namespace }}"
 rules:
   # Ressources de base pour deployment
@@ -92,36 +92,36 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: tpt-role-binding
+  name: ft-role-binding
   namespace: "{{ .Values.namespace }}"
 subjects:
   - kind: ServiceAccount
-    name: tpt-service-account
+    name: ft-service-account
     namespace: "{{ .Values.namespace }}"
 roleRef:
   kind: Role
-  name: tpt-role
+  name: ft-role
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: tpt-ci-rolebinding
+  name: ft-ci-rolebinding
 subjects:
   - kind: ServiceAccount
-    name: tpt-ci-account
+    name: ft-ci-account
     namespace: "{{ .Values.namespace }}"
 roleRef:
   kind: Role
-  name: tpt-ci-role
+  name: ft-ci-role
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: tpt-ci-token
+  name: ft-ci-token
   namespace: "{{ .Values.namespace }}"
   annotations:
-    kubernetes.io/service-account.name: tpt-ci-account
+    kubernetes.io/service-account.name: ft-ci-account
     kubernetes.io/service-account.namespace: "{{ .Values.namespace }}"
 type: kubernetes.io/service-account-token
