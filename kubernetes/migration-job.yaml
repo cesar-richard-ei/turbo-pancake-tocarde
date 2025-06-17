@@ -16,7 +16,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: django-migrate
-          image: ghcr.io/cesar-richard-ei/turbo-pancake-tocarde-backend:latest
+          image: ghcr.io/cesar-richard-ei/france-tocarde-backend:latest
           imagePullPolicy: Always
           command: ["/bin/sh", "-c"]
           args:

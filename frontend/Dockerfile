@@ -14,7 +14,7 @@ RUN npm run build
 
 FROM nginx:alpine
 LABEL org.opencontainers.image.authors="Cesar Richard <cesar@crichard.fr>"
-LABEL org.opencontainers.image.source="https://github.com/cesar-richard-ei/turbo-pancake-tocarde"
+LABEL org.opencontainers.image.source="https://github.com/cesar-richard-ei/france-tocarde"
 
 # Créer les répertoires nécessaires avec les bonnes permissions
 RUN mkdir -p /var/cache/nginx/client_temp \
