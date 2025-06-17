@@ -6,7 +6,7 @@ import { Label } from "../ui/label";
 import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
 import { useMutation } from "@tanstack/react-query";
-import { updateUser } from "../../../api/user";
+import { updateUser } from "~/api/user";
 
 interface EditProfileDialogProps {
   open: boolean;
