@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: tpt-db
+  name: ft-db
   namespace: {{ .Values.namespace }}
   annotations:
     secrets.infisical.com/auto-reload: "true"
 spec:
-  serviceName: tpt-db
+  serviceName: ft-db
   replicas: 1
   updateStrategy:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: tpt-db
+      app: ft-db
   template:
     metadata:
       labels:
-        app: tpt-db
+        app: ft-db
         version: v1
         release: {{ .Release.Name }}
     spec:
       nodeSelector:
         kubernetes.io/hostname: veronica
-      serviceAccountName: tpt-service-account
+      serviceAccountName: ft-service-account
       terminationGracePeriodSeconds: 60
       volumes:
         - name: postgres-queries
@@ -40,7 +40,7 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: tpt-secrets
+                  name: ft-secrets
                   key: POSTGRES_PASSWORD
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
@@ -92,11 +92,11 @@ spec:
               name: metrics
           env:
             - name: DATA_SOURCE_NAME
-              value: "postgresql://postgres:$(POSTGRES_PASSWORD)@localhost:5432/tpt?sslmode=disable"
+              value: "postgresql://postgres:$(POSTGRES_PASSWORD)@localhost:5432/ft?sslmode=disable"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: tpt-secrets
+                  name: ft-secrets
                   key: POSTGRES_PASSWORD
             - name: PG_EXPORTER_CONSTANT_LABELS
               value: "release={{ .Release.Name }},namespace={{ .Release.Namespace }}"

@@ -1,10 +1,10 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: tpt-frontend
+  name: ft-frontend
   namespace: {{ .Release.Namespace }}
 spec:
-  host: tpt-frontend
+  host: ft-frontend
   trafficPolicy:
     tls:
       mode: DISABLE
@@ -12,10 +12,10 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: tpt-postgres
+  name: ft-postgres
   namespace: {{ .Release.Namespace }}
 spec:
-  host: tpt-postgres
+  host: ft-postgres
   trafficPolicy:
     tls:
       mode: ISTIO_MUTUAL
@@ -26,13 +26,13 @@ metadata:
   name: backend-rule
   namespace: {{ .Release.Namespace }}
 spec:
-  host: tpt-backend
+  host: ft-backend
   trafficPolicy:
     loadBalancer:
       simple: ROUND_ROBIN
     tls:
       mode: ISTIO_MUTUAL
-      sni: tpt-backend.{{ .Release.Namespace }}.svc.cluster.local
+      sni: ft-backend.{{ .Release.Namespace }}.svc.cluster.local
   subsets:
   - name: v1
     labels:

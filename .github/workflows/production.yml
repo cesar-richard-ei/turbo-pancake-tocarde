@@ -74,8 +74,8 @@ jobs:
           context: backend
           push: true
           build-args: |
-            TPT_VERSION=${{ needs.tag.outputs.tag_name }}
-            TPT_SENTRY_ENVIRONMENT=production
+            FT_VERSION=${{ needs.tag.outputs.tag_name }}
+            FT_SENTRY_ENVIRONMENT=production
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:${{ needs.tag.outputs.tag_name }}
             ${{ github.ref == 'refs/heads/main' && format('{0}/{1}:latest', env.REGISTRY, env.IMAGE_NAME_BACKEND) || '' }}
@@ -158,7 +158,7 @@ jobs:
             context:
               cluster: default
               user: ci
-              namespace: tpt-production
+              namespace: ft-production
           current-context: ci
           EOF
           chmod 400 kubeconfig
@@ -167,15 +167,15 @@ jobs:
       - name: Run migrations
         run: |
           sed -i 's|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:${{ needs.tag.outputs.tag_name }}|' kubernetes/migration-job.yaml
-          kubectl apply -f kubernetes/migration-job.yaml -n tpt-production
+          kubectl apply -f kubernetes/migration-job.yaml -n ft-production
           echo "Attente de la fin des migrations..."
-          kubectl wait --for=condition=complete job/django-migrate -n tpt-production --timeout=300s
+          kubectl wait --for=condition=complete job/django-migrate -n ft-production --timeout=300s
 
       - name: Deploy to production
         run: |
-          helm upgrade --install tpt-production ./kubernetes/chart \
+          helm upgrade --install ft-production ./kubernetes/chart \
             -f ./kubernetes/chart/values.yaml \
-            -n tpt-production \
+            -n ft-production \
             --create-namespace \
             --atomic \
             --set image.tag=${{ needs.tag.outputs.tag_name }} \

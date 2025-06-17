@@ -4,8 +4,8 @@ services:
     user: postgres
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: tpt
-      POSTGRES_DB: tpt
+      POSTGRES_PASSWORD: ft
+      POSTGRES_DB: ft
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 1s
@@ -16,24 +16,24 @@ services:
       - ./sql:/docker-entrypoint-initdb.d/
 
   backend:
-    image: tpt-backend
+    image: ft-backend
     build:
       context: backend
     environment:
       DJANGO_SECRET_KEY: "+uochl)=pkgm#_8v0d)e&w0+0h9%d-+p)w19my_0^5om%ur#e2"
-      TPT_DJANGO_DEBUG: "True"
-      TPT_DJANGO_ALLOWED_HOSTS: "*"
-      TPT_CSRF_TRUSTED_ORIGINS: "http://localhost:5173,https://silver-dollop-r6wv7jxq5w9fw7r4-5173.app.github.dev"
+      FT_DJANGO_DEBUG: "True"
+      FT_DJANGO_ALLOWED_HOSTS: "*"
+      FT_CSRF_TRUSTED_ORIGINS: "http://localhost:5173,https://silver-dollop-r6wv7jxq5w9fw7r4-5173.app.github.dev"
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: tpt
-      POSTGRES_DB: tpt
+      POSTGRES_PASSWORD: ft
+      POSTGRES_DB: ft
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
-      TPT_LOG_LEVEL: "INFO"
+      FT_LOG_LEVEL: "INFO"
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/tpt:/code/tpt
+      - ./backend/ft:/code/ft
     depends_on:
       db:
         condition: service_healthy

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tpt-backend
+  name: ft-backend
   namespace: "{{ .Values.namespace }}"
   annotations:
     secrets.infisical.com/auto-reload: "true"
@@ -9,7 +9,7 @@ spec:
   replicas: {{ .Values.web.replicas | int }}
   selector:
     matchLabels:
-      app: tpt-backend
+      app: ft-backend
       version: v1
   strategy:
     type: RollingUpdate
@@ -19,14 +19,14 @@ spec:
   template:
     metadata:
       labels:
-        app: tpt-backend
+        app: ft-backend
         version: v1
         sidecar.istio.io/inject: "true"
       annotations:
         proxy.istio.io/config: '{"holdApplicationUntilProxyStarts": true}'
         sidecar.istio.io/rewriteAppHTTPProbers: "true"
     spec:
-      serviceAccountName: tpt-service-account
+      serviceAccountName: ft-service-account
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -35,7 +35,7 @@ spec:
                   - key: app
                     operator: In
                     values:
-                      - tpt-backend
+                      - ft-backend
               topologyKey: "kubernetes.io/hostname"
       imagePullSecrets:
         - name: ghcr-secret
@@ -50,12 +50,12 @@ spec:
             - -c
             - |
               python manage.py collectstatic --noinput
-              gunicorn tpt.wsgi:application --bind 0.0.0.0:8000 --timeout 60
+              gunicorn ft.wsgi:application --bind 0.0.0.0:8000 --timeout 60
           envFrom:
             - configMapRef:
-                name: tpt-config
+                name: ft-config
             - secretRef:
-                name: tpt-secrets
+                name: ft-secrets
           ports:
             - containerPort: 8000
           readinessProbe:

@@ -10,7 +10,7 @@ spec:
       annotations:
         sidecar.istio.io/inject: "false"
     spec:
-      serviceAccountName: tpt-service-account
+      serviceAccountName: ft-service-account
       restartPolicy: Never
       imagePullSecrets:
         - name: ghcr-secret
@@ -26,7 +26,7 @@ spec:
               echo "Migrations done"
           envFrom:
             - configMapRef:
-                name: tpt-config
+                name: ft-config
             - secretRef:
-                name: tpt-secrets
+                name: ft-secrets
   backoffLimit: 2
