@@ -227,9 +227,19 @@ export default function Home() {
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                {events.map((event) => (
-                  <EventCard key={event.id} event={event} />
-                ))}
+                {events
+                  .filter(
+                    (event) =>
+                      event.location &&
+                      event.location
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                        .toLowerCase()
+                        .includes("compiegne")
+                  )
+                  .map((event) => (
+                    <EventCard key={event.id} event={event} />
+                  ))}
               </div>
             </section>
           </div>
