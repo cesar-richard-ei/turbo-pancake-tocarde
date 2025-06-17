@@ -16,6 +16,16 @@ class Event(models.Model):
         verbose_name="Description",
         help_text="Description de l'événement",
     )
+    at_compiegne: bool = models.BooleanField(
+        default=True,
+        verbose_name="À Compiegne",
+        help_text="Si l'événement est à Compiegne",
+    )
+    is_public: bool = models.BooleanField(
+        default=True,
+        verbose_name="Public",
+        help_text="Si l'événement est public",
+    )
     location: str = models.CharField(
         max_length=255, verbose_name="Lieu", help_text="Lieu de l'événement"
     )
@@ -29,11 +39,15 @@ class Event(models.Model):
         max_length=255,
         verbose_name="URL de l'inscription",
         help_text="URL de l'inscription à l'événement",
+        blank=True,
+        null=True,
     )
     url_website: str = models.URLField(
         max_length=255,
         verbose_name="URL du site web",
         help_text="URL du site web de l'événement",
+        blank=True,
+        null=True,
     )
     prices: str = models.TextField(
         null=True,

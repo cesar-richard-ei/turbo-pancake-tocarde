@@ -4,7 +4,6 @@ import { Link } from 'react-router';
 import { Button } from '~/components/ui/button';
 import { Calendar, ExternalLink, Mail, MapPin, Menu } from 'lucide-react';
 import { useState } from 'react';
-import { Card, CardContent } from '~/components/ui/card';
 import { Badge } from '~/components/ui/badge';
 import { Separator } from '~/components/ui/separator';
 import { ImportantLink } from "~/components/ImportantLink";
@@ -12,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchLinks } from "~/lib/resources";
 import { fetchEvents } from "~/lib/event";
 import { EventCard } from "~/components/eventCard";
+import { Spinner } from "~/components/ui/spinner";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -198,7 +198,7 @@ export default function Home() {
               </h3>
 
               <div className="grid md:grid-cols-1 gap-4">
-                {linksLoading && <p>Chargement...</p>}
+                <Spinner show={linksLoading} />
                 {!linksLoading && importantLinks.map((link) => (
                   <ImportantLink
                     key={link.id}
@@ -227,19 +227,16 @@ export default function Home() {
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                {events
+                <Spinner show={eventsLoading} />
+                {!eventsLoading && (
+                events
                   .filter(
                     (event) =>
-                      event.location &&
-                      event.location
-                        .normalize("NFD")
-                        .replace(/[\u0300-\u036f]/g, "")
-                        .toLowerCase()
-                        .includes("compiegne")
+                      event.at_compiegne && event.is_public
                   )
                   .map((event) => (
                     <EventCard key={event.id} event={event} />
-                  ))}
+                  )))}
               </div>
             </section>
           </div>

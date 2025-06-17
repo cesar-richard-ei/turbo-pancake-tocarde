@@ -16,6 +16,8 @@ class EventSerializer(serializers.ModelSerializer):
             "url_website",
             "prices",
             "is_active",
+            "at_compiegne",
+            "is_public",
         ]
         read_only_fields = [
             "created_at",

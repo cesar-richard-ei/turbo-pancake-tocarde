@@ -9,4 +9,5 @@ export default [
   route("/verify-email/:key", "routes/verify-email.tsx"),
   route("/reset-password/:key/:uid", "routes/reset-password.tsx"),
   route("/login-error", "routes/login-error.tsx"),
+  route("/.well-known/*", "routes/well-known.tsx"),
 ] satisfies RouteConfig;

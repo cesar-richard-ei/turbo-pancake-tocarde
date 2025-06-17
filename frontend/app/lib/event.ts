@@ -7,6 +7,8 @@ export interface EventType {
   start_date: string;
   end_date: string;
   location: string;
+  at_compiegne: boolean;
+  is_public: boolean;
 }
 
 export interface PaginatedEvents {
@@ -23,6 +25,8 @@ export const EventTypeSchema = z.object({
   start_date: z.string(),
   end_date: z.string(),
   location: z.string(),
+  at_compiegne: z.boolean(),
+  is_public: z.boolean(),
 });
 
 export const PaginatedEventsSchema = z.object({
