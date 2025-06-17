@@ -4,6 +4,7 @@ import { NavBar } from "../components/NavBar";
 import { useAuth } from "../components/auth/AuthContext";
 import { Navigate } from 'react-router';
 import ChangePasswordDialog from '../components/auth/ChangePasswordDialog';
+import { getFalucheStatus } from '~/lib/falucheStatus';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -17,9 +18,6 @@ export default function Profile() {
   // Utiliser une ref pour éviter les boucles infinies
   const initialLoadDone = useRef(false);
   const [openChange, setOpenChange] = useState(false);
-
-  // Déboguer les données de l'utilisateur
-  console.log('Données utilisateur:', user);
 
   // Rafraîchir les données utilisateur une seule fois au chargement de la page
   useEffect(() => {
@@ -38,8 +36,7 @@ export default function Profile() {
     await refreshUser();
   };
 
-  // Accéder aux données utilisateur correctement
-  const userData = user?.user || user;
+  const userData = user?.profile;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -100,13 +97,13 @@ export default function Profile() {
                 <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                   <dt className="text-sm font-medium text-gray-500">Statut de Faluche</dt>
                   <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                    {userData?.faluche_status || <span className="text-gray-400 italic">Non disponible</span>}
+                    {getFalucheStatus(userData?.faluche_status) || <span className="text-gray-400 italic">Non disponible</span>}
                   </dd>
                 </div>
                 <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                   <dt className="text-sm font-medium text-gray-500">Surnom de Faluche</dt>
                   <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                    {userData?.faluche_surname || <span className="text-gray-400 italic">Non disponible</span>}
+                    {userData?.faluche_nickname || <span className="text-gray-400 italic">Non disponible</span>}
                   </dd>
                 </div>
                 <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

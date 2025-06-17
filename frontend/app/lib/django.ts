@@ -18,7 +18,7 @@ export function getCSRFToken () {
 }
 
 export const URLs = {
-    CURRENT_USER: '/api/user/users/me/',
+    CURRENT_USER: '/api/user/me/',
     USER: '/api/user/users/',
 }
 

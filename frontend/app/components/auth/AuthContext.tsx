@@ -1,10 +1,37 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { getAuth, logout } from '../../lib/allauth';
+import { getUser } from '~/lib/django';
+import type { FalucheStatus } from '~/lib/falucheStatus';
 
 interface User {
   email: string;
+  has_usable_password: boolean;
   [key: string]: any;
+  profile: {
+    address: string;
+    birth_date: string;
+    can_host_peoples: boolean;
+    car_seats: number;
+    city: string;
+    country: string;
+    date_joined: string;
+    email: string;
+    faluche_nickname: string;
+    faluche_status: FalucheStatus;
+    first_name: string;
+    has_car: boolean;
+    home_available_beds: number;
+    home_rules: string;
+    id: number;
+    is_active: boolean;
+    is_staff: boolean;
+    is_superuser: boolean;
+    last_login: string;
+    last_name: string;
+    phone_number: string;
+    zip_code: string;
+  };
 }
 
 interface AuthContextType {
@@ -48,10 +75,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setError(null);
 
       const response = await getAuth();
+      const profileResponse = await getUser();
+      const profile = await profileResponse.json();
 
       if (response.status === 200) {
         if (response.meta?.is_authenticated && response.data) {
-          setUser(response.data);
+          const userData = {
+            ...response.data,
+            profile: profile
+          }
+          setUser(userData);
         } else {
           setUser(null);
         }

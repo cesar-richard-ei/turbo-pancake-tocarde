@@ -6,7 +6,7 @@ export function NavBar() {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const userData = user?.user || user;
+  const userData = user?.profile;
 
   const handleLogout = async () => {
     await logout();
@@ -42,7 +42,7 @@ export function NavBar() {
             ) : isAuthenticated ? (
               <>
                 <div className="mr-4 text-gray-700">
-                  Bienvenue, <span className="font-semibold">{userData?.email || userData?.display}</span> !
+                  Bienvenue, <span className="font-semibold">{userData?.first_name || userData?.email}</span> !
                 </div>
                 <div className="ml-3 relative">
                   <div>
