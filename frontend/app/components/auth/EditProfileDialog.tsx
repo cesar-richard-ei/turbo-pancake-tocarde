@@ -74,7 +74,7 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} aria-describedby="Modifier les informations de votre profil">
       <DialogContent className="max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Modifier le profil</DialogTitle>
