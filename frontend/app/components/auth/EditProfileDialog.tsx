@@ -70,6 +70,11 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Vérification des champs obligatoires
+    if (!form.first_name.trim() || !form.last_name.trim()) {
+      toast.error("Les champs Prénom et Nom sont obligatoires.");
+      return;
+    }
     mutation.mutate(form);
   };
 
@@ -81,11 +86,11 @@ export default function EditProfileDialog({ open, onOpenChange }: EditProfileDia
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="first_name">Prénom</Label>
+            <Label htmlFor="first_name">Prénom (*)</Label>
             <Input id="first_name" name="first_name" value={form.first_name} onChange={handleChange} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="last_name">Nom</Label>
+            <Label htmlFor="last_name">Nom (*)</Label>
             <Input id="last_name" name="last_name" value={form.last_name} onChange={handleChange} />
           </div>
           <div className="space-y-2">

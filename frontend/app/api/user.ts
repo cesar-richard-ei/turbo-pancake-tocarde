@@ -24,7 +24,10 @@ export const settings: {
 export function updateUser(data: Record<string, any>, id: number) {
   const options = {
     method: 'PATCH',
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      ...data,
+      birth_date: data.birth_date.length ? data.birth_date : null,
+    }),
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
