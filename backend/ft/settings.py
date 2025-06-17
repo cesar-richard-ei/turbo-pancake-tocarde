@@ -183,3 +183,5 @@ EMAIL_USE_TLS = False
 EMAIL_USE_SSL = False
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
