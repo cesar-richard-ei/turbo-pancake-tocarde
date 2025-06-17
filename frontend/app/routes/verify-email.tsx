@@ -48,14 +48,14 @@ export default function VerifyEmail() {
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="w-full max-w-md rounded-lg border p-6 shadow-md">
         <h1 className="mb-4 text-center text-2xl font-bold">Vérification d'email</h1>
-        
+
         {status === "loading" && (
           <div className="text-center">
             <p className="mb-4">Vérification de votre adresse email en cours...</p>
             <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-t-blue-500"></div>
           </div>
         )}
-        
+
         {status === "success" && (
           <div className="rounded-md bg-green-50 p-4">
             <div className="flex">
@@ -71,7 +71,7 @@ export default function VerifyEmail() {
             </div>
           </div>
         )}
-        
+
         {status === "error" && (
           <div className="rounded-md bg-red-50 p-4">
             <div className="flex">
@@ -83,8 +83,8 @@ export default function VerifyEmail() {
               <div className="ml-3">
                 <p className="text-sm font-medium text-red-800">{message}</p>
                 <p className="mt-2 text-sm text-red-700">
-                  <button 
-                    onClick={() => navigate("/login")} 
+                  <button
+                    onClick={() => navigate("/login")}
                     className="font-medium text-red-700 underline"
                   >
                     Retour à la page de connexion
@@ -97,4 +97,4 @@ export default function VerifyEmail() {
       </div>
     </div>
   );
-} 
+}

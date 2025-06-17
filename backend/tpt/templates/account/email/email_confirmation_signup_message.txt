@@ -10,4 +10,4 @@ Pour confirmer que cette adresse vous appartient, veuillez cliquer sur le lien s
 
 Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer ce message.
 {% endblocktrans %}
-{% endautoescape %} 
+{% endautoescape %}

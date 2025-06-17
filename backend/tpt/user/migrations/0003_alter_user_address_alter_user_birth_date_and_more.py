@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("user", "0002_user_address_user_birth_date_user_can_host_peoples_and_more"),
     ]

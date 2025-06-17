@@ -10,7 +10,7 @@ interface GoogleAuthButtonProps {
 export function GoogleAuthButton({ type, callbackPath, className = '' }: GoogleAuthButtonProps) {
   const handleClick = () => {
     redirectToProvider(
-      'google', 
+      'google',
       callbackPath,
       type === 'login' ? AuthProcess.LOGIN : AuthProcess.CONNECT
     );
@@ -33,4 +33,4 @@ export function GoogleAuthButton({ type, callbackPath, className = '' }: GoogleA
       {type === 'login' ? 'Se connecter' : 'S\'inscrire'} avec Google
     </button>
   );
-} 
+}

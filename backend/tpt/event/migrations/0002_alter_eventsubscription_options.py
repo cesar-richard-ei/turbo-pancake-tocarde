@@ -4,14 +4,17 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('event', '0001_initial'),
+        ("event", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='eventsubscription',
-            options={'ordering': ['event', 'user'], 'verbose_name': 'Inscription', 'verbose_name_plural': 'Inscriptions'},
+            name="eventsubscription",
+            options={
+                "ordering": ["event", "user"],
+                "verbose_name": "Inscription",
+                "verbose_name_plural": "Inscriptions",
+            },
         ),
     ]

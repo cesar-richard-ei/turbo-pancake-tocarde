@@ -7,7 +7,7 @@ export default function LoginError() {
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="w-full max-w-md rounded-lg border p-6 shadow-md">
         <h1 className="mb-4 text-center text-2xl font-bold">Erreur de connexion</h1>
-        
+
         <div className="rounded-md bg-red-50 p-4">
           <div className="flex">
             <div className="flex-shrink-0">
@@ -25,7 +25,7 @@ export default function LoginError() {
             </div>
           </div>
         </div>
-        
+
         <div className="mt-4 flex justify-center space-x-4">
           <button
             onClick={() => navigate("/login")}
@@ -33,7 +33,7 @@ export default function LoginError() {
           >
             Retour à la connexion
           </button>
-          
+
           <button
             onClick={() => navigate("/")}
             className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -44,4 +44,4 @@ export default function LoginError() {
       </div>
     </div>
   );
-} 
+}

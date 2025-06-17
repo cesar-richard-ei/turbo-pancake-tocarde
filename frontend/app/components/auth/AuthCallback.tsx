@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { authenticateByToken, providerSignup, getAuth } from '../../lib/allauth';
+import { authenticateByToken, providerSignup, getAuth, type AuthProcessType } from '../../lib/allauth';
 
 type CallbackStatus = 'loading' | 'success' | 'error' | 'signup-required';
 
 export function AuthCallback() {
   const [status, setStatus] = useState<CallbackStatus>('loading');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -25,7 +25,7 @@ export function AuthCallback() {
         if (authResponse.status === 200 && authResponse.meta?.is_authenticated) {
           setStatus('success');
           setUserData(authResponse.data);
-          
+
           // Rediriger vers la page d'accueil après un court délai
           setTimeout(() => {
             navigate('/');
@@ -41,12 +41,12 @@ export function AuthCallback() {
         }
 
         // Authenticate with the token
-        const response = await authenticateByToken(providerId, token, process);
+        const response = await authenticateByToken(providerId, token, process as AuthProcessType);
 
         if (response.status === 200) {
           if (response.meta?.is_authenticated) {
             setStatus('success');
-            
+
             // Récupérer les infos utilisateur
             const authResponse = await getAuth();
             if (authResponse.status === 200) {
@@ -81,7 +81,7 @@ export function AuthCallback() {
 
   const handleCompleteSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!userData?.provider_account) {
       return;
     }
@@ -165,4 +165,4 @@ export function AuthCallback() {
       <p className="mb-4">Redirection en cours...</p>
     </div>
   );
-} 
+}

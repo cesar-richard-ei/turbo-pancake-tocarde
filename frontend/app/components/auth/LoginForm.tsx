@@ -24,11 +24,11 @@ export function LoginForm() {
 
     try {
       const response = await login(formData);
-      
+
       if (response.status === 200 && response.meta?.is_authenticated) {
         // Obtenir les informations de l'utilisateur
         const authResponse = await getAuth();
-        
+
         if (authResponse.status === 200) {
           // Rediriger vers la page d'accueil
           navigate('/');
@@ -49,13 +49,13 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-md mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-center">Connexion</h2>
-      
+
       {error && (
         <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
           {error}
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
@@ -71,7 +71,7 @@ export function LoginForm() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
             Mot de passe
@@ -86,7 +86,7 @@ export function LoginForm() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
+
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <input
@@ -99,14 +99,14 @@ export function LoginForm() {
               Se souvenir de moi
             </label>
           </div>
-          
+
           <div className="text-sm">
             <a href="/reset-password" className="font-medium text-blue-600 hover:text-blue-500">
               Mot de passe oublié?
             </a>
           </div>
         </div>
-        
+
         <div>
           <button
             type="submit"
@@ -117,7 +117,7 @@ export function LoginForm() {
           </button>
         </div>
       </form>
-      
+
       <div className="mt-6">
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
@@ -127,12 +127,12 @@ export function LoginForm() {
             <span className="px-2 bg-white text-gray-500">Ou continuer avec</span>
           </div>
         </div>
-        
+
         <div className="mt-6">
           <GoogleAuthButton type="login" callbackPath="/auth/callback" className="w-full" />
         </div>
       </div>
-      
+
       <p className="mt-4 text-center text-sm text-gray-600">
         Pas encore de compte?{' '}
         <a href="/signup" className="font-medium text-blue-600 hover:text-blue-500">

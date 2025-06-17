@@ -42,14 +42,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const refreshUser = async () => {
     // Éviter les appels en parallèle
     if (isRefreshing.current) return;
-    
+
     try {
       isRefreshing.current = true;
       setIsLoading(true);
       setError(null);
-      
+
       const response = await getAuth();
-      
+
       if (response.status === 200) {
         if (response.meta?.is_authenticated && response.data) {
           setUser(response.data);
@@ -76,9 +76,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const response = await logout();
-      
+
       if (response.status === 200) {
         setUser(null);
       } else {
@@ -102,11 +102,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (typeof window === 'undefined' || typeof document === 'undefined') {
       return;
     }
-    
+
     const handleAuthChange = (event: CustomEvent) => {
       // Ignorer les événements si refreshUser est déjà en cours
       if (isRefreshing.current) return;
-      
+
       if (event.detail?.meta?.is_authenticated) {
         refreshUser();
       } else {
@@ -115,7 +115,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     };
 
     document.addEventListener('allauth.auth.change', handleAuthChange as EventListener);
-    
+
     // Vérifier l'état d'authentification au chargement
     refreshUser();
 
@@ -135,4 +135,4 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-} 
+}

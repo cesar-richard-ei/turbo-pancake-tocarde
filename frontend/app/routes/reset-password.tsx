@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { getCSRFToken } from "~/lib/django";
 
@@ -9,25 +9,24 @@ export default function ResetPassword() {
   const [password2, setPassword2] = useState("");
   const [status, setStatus] = useState<"form" | "loading" | "success" | "error">("form");
   const [message, setMessage] = useState("");
-  const [csrfToken, setCsrfToken] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (password1 !== password2) {
       setMessage("Les mots de passe ne correspondent pas.");
       setStatus("error");
       return;
     }
-    
+
     if (password1.length < 8) {
       setMessage("Le mot de passe doit contenir au moins 8 caractères.");
       setStatus("error");
       return;
     }
-    
+
     setStatus("loading");
-    
+
     try {
       const response = await fetch("/api/_allauth/browser/v1/auth/password/reset", {
         method: "POST",
@@ -57,7 +56,7 @@ export default function ResetPassword() {
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="w-full max-w-md rounded-lg border p-6 shadow-md">
         <h1 className="mb-4 text-center text-2xl font-bold">Réinitialisation de mot de passe</h1>
-        
+
         {status === "form" && (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -74,7 +73,7 @@ export default function ResetPassword() {
                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
               />
             </div>
-            
+
             <div>
               <label htmlFor="password2" className="block text-sm font-medium text-gray-700">
                 Confirmer le mot de passe
@@ -89,7 +88,7 @@ export default function ResetPassword() {
                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
               />
             </div>
-            
+
             <div>
               <button
                 type="submit"
@@ -100,14 +99,14 @@ export default function ResetPassword() {
             </div>
           </form>
         )}
-        
+
         {status === "loading" && (
           <div className="text-center">
             <p className="mb-4">Réinitialisation de votre mot de passe en cours...</p>
             <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-t-blue-500"></div>
           </div>
         )}
-        
+
         {status === "success" && (
           <div className="rounded-md bg-green-50 p-4">
             <div className="flex">
@@ -123,7 +122,7 @@ export default function ResetPassword() {
             </div>
           </div>
         )}
-        
+
         {status === "error" && (
           <div className="rounded-md bg-red-50 p-4">
             <div className="flex">
@@ -147,4 +146,4 @@ export default function ResetPassword() {
       </div>
     </div>
   );
-} 
+}
