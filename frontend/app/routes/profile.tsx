@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { Route } from "./+types/profile";
-import { NavBar } from "../components/NavBar";
-import { useAuth } from "../components/auth/AuthContext";
+import { NavBar } from "~/components/NavBar";
+import { useAuth } from "~/components/auth/AuthContext";
 import { Navigate } from 'react-router';
-import ChangePasswordDialog from '../components/auth/ChangePasswordDialog';
-import EditProfileDialog from '../components/auth/EditProfileDialog';
+import ChangePasswordDialog from '~/components/auth/ChangePasswordDialog';
+import EditProfileDialog from '~/components/auth/EditProfileDialog';
 import { getFalucheStatus } from '~/lib/falucheStatus';
 
 export function meta({}: Route.MetaArgs) {
