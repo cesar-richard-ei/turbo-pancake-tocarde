@@ -9,10 +9,13 @@ class EventSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "description",
-            "url",
+            "location",
+            "start_date",
+            "end_date",
+            "url_signup",
+            "url_website",
+            "prices",
             "is_active",
-            "created_at",
-            "updated_at",
         ]
         read_only_fields = [
             "created_at",
