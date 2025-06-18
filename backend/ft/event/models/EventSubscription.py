@@ -42,6 +42,11 @@ class EventSubscription(models.Model):
             ("MAYBE", "Peut-Être"),
         ],
     )
+    can_invite: bool = models.BooleanField(
+        default=False,
+        verbose_name="Peut inviter",
+        help_text="Si l'utilisateur peut inviter d'autres utilisateurs",
+    )
 
     class Meta:
         verbose_name = "Inscription"

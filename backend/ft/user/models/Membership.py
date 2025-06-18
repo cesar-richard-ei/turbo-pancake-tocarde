@@ -43,4 +43,8 @@ class Membership(models.Model):
         ordering = ["start_date", "end_date"]
 
     def __str__(self):
-        return "{} ({})".format(self.name, self.location)
+        return "{} {} ({})".format(
+            self.user.first_name,
+            self.user.last_name,
+            self.start_date,
+        )
