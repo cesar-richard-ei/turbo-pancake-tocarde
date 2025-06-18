@@ -1,12 +1,9 @@
-import { type Route } from ".+types/well-known";
-
-export function loader({ }: Route.LoaderArgs) {
-  return new Response(null, {
-    status: 204,
-    statusText: "No Content"
-  });
-}
+import { useEffect } from 'react';
 
 export default function WellKnown() {
+  useEffect(() => {
+    document.title = "Well Known";
+  }, []);
+
   return null;
 }
