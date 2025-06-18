@@ -85,7 +85,7 @@ class Event(models.Model):
     class Meta:
         verbose_name = "Événement"
         verbose_name_plural = "Événements"
-        ordering = ["start_date", "start_date"]
+        ordering = ["start_date", "name"]
 
     def __str__(self):
         return "{} ({})".format(self.name, self.location)

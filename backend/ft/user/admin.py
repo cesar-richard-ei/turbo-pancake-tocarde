@@ -1,9 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
-
-from ft.user.models import User
+from ft.user.models import User, Membership
 
 
 @admin.register(User)
@@ -109,16 +107,18 @@ class UserAdmin(UserAdmin):
     ordering = ("last_name", "first_name", "email")
     list_filter = ("faluche_status", "has_car", "can_host_peoples")
 
-    def has_module_permission(self, request: HttpRequest) -> bool:
-        return request.user.is_superuser or request.user.is_staff
 
-    def has_change_permission(self, request: HttpRequest, obj=None) -> bool:
-        if request.user.is_superuser or request.user.is_staff:
-            return True
-        return obj is not None and obj.id == request.user.id
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        if request.user.is_superuser:
-            return qs
-        return qs.filter(id=request.user.id)
+@admin.register(Membership)
+class MembershipAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "start_date",
+        "end_date",
+        "is_active",
+        "created_at",
+        "updated_at",
+    )
+    list_filter = ("is_active",)
+    readonly_fields = ("created_at", "updated_at")
+    search_fields = ("user",)
+    ordering = ("start_date", "end_date", "user")
