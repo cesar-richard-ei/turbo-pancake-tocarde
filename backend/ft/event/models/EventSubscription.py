@@ -47,6 +47,11 @@ class EventSubscription(models.Model):
         verbose_name="Peut inviter",
         help_text="Si l'utilisateur peut inviter d'autres utilisateurs",
     )
+    is_active: bool = models.BooleanField(
+        default=True,
+        verbose_name="Actif",
+        help_text="Si l'inscription est active (debug only)",
+    )
 
     class Meta:
         verbose_name = "Inscription"

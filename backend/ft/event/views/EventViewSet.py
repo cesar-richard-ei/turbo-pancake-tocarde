@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from ft.event.models import Event
-from ft.event.serializers import EventSerializer
+from ft.event.serializers import EventSerializer, EventSubscribeActionSerializer
 from ft.event.permissions import IsStaffOrReadOnly
 
 
@@ -10,6 +10,11 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     permission_classes = [IsStaffOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.action == "subscribe":
+            return EventSubscribeActionSerializer
+        return EventSerializer
 
     def get_queryset(self):
         return Event.objects.filter(is_active=True)
