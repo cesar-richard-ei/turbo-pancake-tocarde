@@ -8,4 +8,4 @@ class MembershipViewSet(viewsets.ModelViewSet):
     serializer_class = MembershipSerializer
 
     def get_queryset(self):
-        return User.objects.filter(is_active=True)
+        return Membership.objects.filter(is_active=True)

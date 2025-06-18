@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from ft.user.models import User, Membership
+from django.core.exceptions import ValidationError
 
 
 @admin.register(User)
@@ -122,3 +123,25 @@ class MembershipAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at")
     search_fields = ("user",)
     ordering = ("start_date", "end_date", "user")
+
+    def save_model(self, request, obj, form, change):
+        # Validation: une seule adhésion active par période
+        if obj.is_active:
+            overlapping = Membership.objects.filter(
+                user=obj.user,
+                is_active=True,
+                start_date__lte=obj.end_date,
+                end_date__gte=obj.start_date,
+            )
+
+            # Exclure l'instance actuelle si c'est une modification
+            if change:
+                overlapping = overlapping.exclude(pk=obj.pk)
+
+            if overlapping.exists():
+                raise ValidationError(
+                    "Cet utilisateur a déjà une adhésion active "
+                    "pendant cette période."
+                )
+
+        super().save_model(request, obj, form, change)
