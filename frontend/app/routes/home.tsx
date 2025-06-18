@@ -13,6 +13,15 @@ import { fetchEvents } from "~/lib/event";
 import { EventCard } from "~/components/eventCard";
 import { Spinner } from "~/components/ui/spinner";
 
+/**
+ * Détermine si c'est le jour ou la nuit
+ * @returns "bonjour" entre 6h et 18h, "bonsoir" entre 18h et 6h
+ */
+const getSalutationByTime = (): string => {
+  const currentHour = new Date().getHours();
+  return currentHour >= 6 && currentHour < 18 ? "bonjour" : "bonsoir";
+};
+
 export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Tocarde - Compiègne" },
@@ -24,6 +33,8 @@ export default function Home() {
   const { isAuthenticated, user, isLoading, logout } = useAuth();
   const userData = user?.user || user;
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const salutation = getSalutationByTime();
+
   const { data: importantLinks = { results: [] }, isLoading: linksLoading } = useQuery({
     queryKey: ["important-links"],
     queryFn: fetchLinks,
@@ -171,7 +182,7 @@ export default function Home() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-royal-blue-700 to-gold-500">
                 La Tocarde
               </span>
-              {" "}vous souhaite le bonsoir !
+              {" "}vous souhaite le {salutation} !
             </h2>
             {!isAuthenticated && (
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
