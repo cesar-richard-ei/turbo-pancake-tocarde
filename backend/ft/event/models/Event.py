@@ -61,12 +61,13 @@ class Event(models.Model):
         help_text="Si l'événement est actif (visible sur le site)",
     )
     type: str = models.CharField(
-        max_length=255,
+        max_length=8,
         verbose_name="Type",
         help_text="Type de l'événement",
         choices=[
             ("CONGRESS", "Congrès"),
             ("DRINK", "Apéral"),
+            ("OFFICE", "Office"),
             ("OTHER", "Autre"),
         ],
     )

@@ -26,12 +26,11 @@ class EventSubscriptionAdmin(admin.ModelAdmin):
     list_display = (
         "event",
         "user",
-        "is_active",
-        "can_invite",
+        "answer",
         "created_at",
         "updated_at",
     )
-    list_filter = ("is_active",)
+    list_filter = ("answer",)
     readonly_fields = ("created_at", "updated_at")
     search_fields = ("event", "user")
-    ordering = ("event", "user")
+    ordering = ("event", "user", "answer")

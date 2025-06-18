@@ -18,7 +18,7 @@ interface User {
     date_joined: string;
     email: string;
     faluche_nickname: string;
-    faluche_status: FalucheStatus;
+    faluche_status?: FalucheStatus | null;
     first_name: string;
     has_car: boolean;
     home_available_beds: number;

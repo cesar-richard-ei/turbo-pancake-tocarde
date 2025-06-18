@@ -22,16 +22,6 @@ class EventSubscription(models.Model):
         verbose_name="Utilisateur",
         help_text="Utilisateur",
     )
-    is_active: bool = models.BooleanField(
-        default=True,
-        verbose_name="Actif",
-        help_text="Si l'inscription est valide (visible sur le site)",
-    )
-    can_invite: bool = models.BooleanField(
-        default=False,
-        verbose_name="Peut inviter",
-        help_text="Si l'utilisateur peut inviter d'autres utilisateurs",
-    )
     created_at: datetime = models.DateTimeField(
         auto_now_add=True,
         verbose_name="Date de création",
@@ -41,6 +31,16 @@ class EventSubscription(models.Model):
         auto_now=True,
         verbose_name="Date de mise à jour",
         help_text="Date de mise à jour de la ressource",
+    )
+    answer: str = models.CharField(
+        max_length=6,
+        verbose_name="Réponse",
+        help_text="Réponse de l'utilisateur",
+        choices=[
+            ("YES", "Participe"),
+            ("NO", "Ne paricipe pas"),
+            ("MAYBE", "Peut-Être"),
+        ],
     )
 
     class Meta:

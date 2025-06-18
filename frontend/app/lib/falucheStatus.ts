@@ -1,4 +1,4 @@
-export type FalucheStatus = 'SYMPATHISANT' | 'IMPETRANT' | 'BAPTISÉ' | 'OTHER' | null;
+export type FalucheStatus = 'SYMPATHISANT' | 'IMPETRANT' | 'BAPTISÉ' | 'OTHER';
 
 export function getFalucheStatus (status: FalucheStatus) {
     if (!status) {

@@ -1,15 +1,8 @@
 import { z } from "zod";
 import { PaginatedSchema } from "./paginatedSchema";
 
-export enum EventTypesEnum {
-  CONGRESS = 'CONGRESS',
-  DRINK = 'DRINK',
-  OTHER = 'OTHER',
-}
-
-export const EventTypesSchema = z.nativeEnum(EventTypesEnum);
+export const EventTypesSchema = z.enum(['CONGRESS', 'DRINK', 'OFFICE', 'OTHER']);
 export type EventTypes = z.infer<typeof EventTypesSchema>;
-
 export const EventTypeSchema = z.object({
   id: z.number(),
   name: z.string(),
