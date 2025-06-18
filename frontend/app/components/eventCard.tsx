@@ -1,4 +1,4 @@
-import type { EventType } from "~/lib/event";
+import { getEventTypes, type EventType } from "~/lib/event";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Calendar, MapPin } from "lucide-react";
@@ -14,13 +14,16 @@ export function EventCard({ event }: { event: EventType }) {
                 alt={event.name}
                 className="object-cover"
             />
-            <Badge className="absolute top-3 left-3 bg-red-500 hover:bg-red-500 text-white">Bientôt</Badge>
+            <Badge className="absolute top-3 left-3 bg-red-500 hover:bg-red-500 text-white">{getEventTypes(event.type)}</Badge>
             </div>
             <CardContent className="p-4">
             <h4 className="font-semibold text-lg mb-2 text-royal-blue-900">{event.name}</h4>
             <div className="flex items-center text-sm text-royal-blue-700 mb-2">
                 <Calendar className="h-4 w-4 mr-1" />
-                {event.start_date}
+                {new Intl.DateTimeFormat('fr-FR', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short'
+                }).format(new Date(event.start_date))}
             </div>
             <div className="flex items-center text-sm text-gray-600 mb-3">
                 <MapPin className="h-4 w-4 mr-1" />

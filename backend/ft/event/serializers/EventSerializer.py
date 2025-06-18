@@ -18,6 +18,7 @@ class EventSerializer(serializers.ModelSerializer):
             "is_active",
             "at_compiegne",
             "is_public",
+            "type",
         ]
         read_only_fields = [
             "created_at",

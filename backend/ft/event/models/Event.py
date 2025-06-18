@@ -60,6 +60,16 @@ class Event(models.Model):
         verbose_name="Actif",
         help_text="Si l'événement est actif (visible sur le site)",
     )
+    type: str = models.CharField(
+        max_length=255,
+        verbose_name="Type",
+        help_text="Type de l'événement",
+        choices=[
+            ("CONGRESS", "Congrès"),
+            ("DRINK", "Apéral"),
+            ("OTHER", "Autre"),
+        ],
+    )
     created_at: datetime = models.DateTimeField(
         auto_now_add=True,
         verbose_name="Date de création",
