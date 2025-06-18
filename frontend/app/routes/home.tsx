@@ -24,11 +24,11 @@ export default function Home() {
   const { isAuthenticated, user, isLoading, logout } = useAuth();
   const userData = user?.user || user;
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { data: importantLinks = [], isLoading: linksLoading } = useQuery({
+  const { data: importantLinks = { results: [] }, isLoading: linksLoading } = useQuery({
     queryKey: ["important-links"],
     queryFn: fetchLinks,
   });
-  const { data: events = [], isLoading: eventsLoading } = useQuery({
+  const { data: events = { results: [] }, isLoading: eventsLoading } = useQuery({
     queryKey: ["events"],
     queryFn: fetchEvents,
   });
@@ -199,7 +199,7 @@ export default function Home() {
 
               <div className="grid md:grid-cols-1 gap-4">
                 <Spinner show={linksLoading} />
-                {!linksLoading && importantLinks.map((link) => (
+                {!linksLoading && importantLinks.results.map((link) => (
                   <ImportantLink
                     key={link.id}
                     title={link.name}
@@ -229,7 +229,7 @@ export default function Home() {
               <div className="grid md:grid-cols-2 gap-6">
                 <Spinner show={eventsLoading} />
                 {!eventsLoading && (
-                events
+                events.results
                   .filter(
                     (event) =>
                       event.at_compiegne && event.is_public

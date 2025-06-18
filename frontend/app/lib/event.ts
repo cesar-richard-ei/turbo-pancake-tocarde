@@ -1,22 +1,5 @@
 import { z } from "zod";
-
-export interface EventType {
-  id: number;
-  name: string;
-  description?: string;
-  start_date: string;
-  end_date: string;
-  location: string;
-  at_compiegne: boolean;
-  is_public: boolean;
-}
-
-export interface PaginatedEvents {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: EventType[];
-}
+import { PaginatedSchema } from "./paginatedSchema";
 
 export const EventTypeSchema = z.object({
   id: z.number(),
@@ -29,17 +12,14 @@ export const EventTypeSchema = z.object({
   is_public: z.boolean(),
 });
 
-export const PaginatedEventsSchema = z.object({
-  count: z.number(),
-  next: z.string().nullable(),
-  previous: z.string().nullable(),
-  results: z.array(EventTypeSchema),
-});
+export type EventType = z.infer<typeof EventTypeSchema>;
 
-export async function fetchEvents(): Promise<EventType[]> {
+export const PaginatedEventsSchema = PaginatedSchema(EventTypeSchema);
+export type PaginatedEvents = z.infer<typeof PaginatedEventsSchema>;
+
+export async function fetchEvents(): Promise<PaginatedEvents> {
   const resp = await fetch('/api/event/events/');
   if (!resp.ok) throw new Error('Failed to fetch events');
   const data = await resp.json();
-  const parsed = PaginatedEventsSchema.parse(data);
-  return parsed.results;
+  return PaginatedEventsSchema.parse(data);
 }
