@@ -13,6 +13,8 @@ export const EventTypeSchema = z.object({
   at_compiegne: z.boolean(),
   is_public: z.boolean(),
   type: EventTypesSchema,
+  subscriptions_count: z.number().optional().default(0),
+  first_subscribers: z.array(z.string()).default([]),
 });
 
 export type EventType = z.infer<typeof EventTypeSchema>;

@@ -32,6 +32,22 @@ export function EventCard({ event }: { event: EventType }) {
             <p className="text-sm text-gray-700 mb-4">
                 {event.description}
             </p>
+            <div className="flex items-center mb-4">
+                <div className="flex -space-x-2 mr-2">
+                    {event.first_subscribers.slice(0, 3).map((i, idx) => (
+                        <Badge
+                            key={idx}
+                            className="w-6 h-6 rounded-full bg-royal-blue-600 text-gold-100 ring-2 ring-white flex items-center justify-center text-xs"
+                        >
+                            {i}
+                        </Badge>
+                    ))}
+                </div>
+                <span className="text-sm text-gray-600">
+                    {event.subscriptions_count} inscrit
+                    {event.subscriptions_count > 1 ? "s" : ""}
+                </span>
+            </div>
             <Link to="/signup">
                 <Button size="sm" className="w-full bg-royal-blue-600 hover:bg-royal-blue-700">
                 S'inscrire
