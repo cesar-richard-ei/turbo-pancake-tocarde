@@ -2,10 +2,18 @@ import { getEventTypes, type EventType } from "~/lib/event";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Calendar, MapPin } from "lucide-react";
-import { Link } from "react-router";
 import { Button } from "./ui/button";
+import { useAuth } from "./auth/AuthContext";
+import { useCreateSubscription } from "~/lib/eventSubscription";
 
 export function EventCard({ event }: { event: EventType }) {
+    const { isAuthenticated } = useAuth();
+    const mutation = useCreateSubscription();
+
+    const handleSubscribe = () => {
+        mutation.mutate(event.id);
+    };
+
     return (
         <Card className="overflow-hidden hover:shadow-lg transition-shadow bg-white">
             <div className="aspect-video relative">
@@ -48,11 +56,16 @@ export function EventCard({ event }: { event: EventType }) {
                     {event.subscriptions_count > 1 ? "s" : ""}
                 </span>
             </div>
-            <Link to="/signup">
-                <Button size="sm" className="w-full bg-royal-blue-600 hover:bg-royal-blue-700">
-                S'inscrire
+            {isAuthenticated && (
+                <Button
+                    size="sm"
+                    className="w-full bg-royal-blue-600 hover:bg-royal-blue-700"
+                    onClick={handleSubscribe}
+                    disabled={mutation.isPending}
+                >
+                    {mutation.isPending ? '...': "S'inscrire"}
                 </Button>
-            </Link>
+            )}
             </CardContent>
         </Card>
     )
