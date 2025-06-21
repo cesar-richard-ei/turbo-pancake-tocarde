@@ -1,47 +1,54 @@
-import type { Route } from "./+types/home";
-import { useAuth } from "../components/auth/AuthContext";
-import { Link } from 'react-router';
-import { Button } from '~/components/ui/button';
-import { Calendar, ExternalLink, Mail, MapPin, Menu } from 'lucide-react';
-import { useState } from 'react';
-import { Badge } from '~/components/ui/badge';
-import { Separator } from '~/components/ui/separator';
-import { ImportantLink } from "~/components/ImportantLink";
 import { useQuery } from "@tanstack/react-query";
-import { fetchLinks } from "~/lib/resources";
 import { fetchEvents } from "~/lib/event";
 import { EventCard } from "~/components/eventCard";
 import { Spinner } from "~/components/ui/spinner";
+import { Separator } from "~/components/ui/separator";
+import { useState } from "react";
+import { Calendar, ExternalLink, Filter, Mail, Menu, MapPin } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
+import { Link } from 'react-router';
+import { useAuth } from "~/components/auth/AuthContext";
 
-/**
- * Détermine si c'est le jour ou la nuit
- * @returns "bonjour" entre 6h et 18h, "bonsoir" entre 18h et 6h
- */
-const getSalutationByTime = (): string => {
-  const currentHour = new Date().getHours();
-  return currentHour >= 6 && currentHour < 18 ? "bonjour" : "bonsoir";
-};
-
-export function meta({ }: Route.MetaArgs) {
+export function meta() {
   return [
-    { title: "Tocarde - Compiègne" },
-    { name: "description", content: "Bienvenue en capitale de la Tocardie !" },
+    { title: "Tous les événements - La Tocarde" },
+    { name: "description", content: "Découvrez tous les événements de La Tocarde" },
   ];
 }
 
-export default function Home() {
+export default function Events() {
   const { isAuthenticated, user, isLoading, logout } = useAuth();
   const userData = user?.user || user;
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const salutation = getSalutationByTime();
-
-  const { data: importantLinks = { results: [] }, isLoading: linksLoading } = useQuery({
-    queryKey: ["important-links"],
-    queryFn: fetchLinks,
-  });
   const { data: events = { results: [] }, isLoading: eventsLoading } = useQuery({
     queryKey: ["events"],
     queryFn: fetchEvents,
+  });
+
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    atCompiegne: true,
+    isPublic: true,
+    type: "ALL"
+  });
+
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+  };
+
+  const updateFilter = (key: string, value: any) => {
+    setFilters({
+      ...filters,
+      [key]: value
+    });
+  };
+
+  const filteredEvents = events.results.filter(event => {
+    if (filters.atCompiegne && !event.at_compiegne) return false;
+    if (filters.isPublic && !event.is_public) return false;
+    if (filters.type !== "ALL" && event.type !== filters.type) return false;
+    return true;
   });
 
   return (
@@ -62,10 +69,10 @@ export default function Home() {
             </div>
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
-              <Link to="#accueil" className="text-royal-blue-800 hover:text-gold-500 transition-colors">
+              <Link to="/" className="text-royal-blue-800 hover:text-gold-500 transition-colors">
                 Accueil
               </Link>
-              <Link to="/events" className="text-royal-blue-800 hover:text-gold-500 transition-colors">
+              <Link to="/events" className="text-royal-blue-800 hover:text-gold-500 transition-colors border-b-2 border-gold-400">
                 Événements
               </Link>
               <Link to="#apropos" className="text-royal-blue-800 hover:text-gold-500 transition-colors">
@@ -113,146 +120,159 @@ export default function Home() {
               )}
             </div>
             {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="md:hidden text-royal-blue-800 hover:bg-gold-100"
-            onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-        </div>
-        {isMobileMenuOpen && (
-          <nav className="md:hidden mt-4 space-y-2 animate-in slide-in-from-top-4 duration-300">
-            <Link to="#accueil" className="block text-royal-blue-800 hover:text-gold-500">
-              Accueil
-            </Link>
-            <Link to="/events" className="block text-royal-blue-800 hover:text-gold-500">
-              Événements
-            </Link>
-            <Link to="#apropos" className="block text-royal-blue-800 hover:text-gold-500">
-              À propos
-            </Link>
-            <Link to="#contact" className="block text-royal-blue-800 hover:text-gold-500">
-              Contact
-            </Link>
-            <div className="pt-2 border-t border-gold-200 space-y-2">
-              {isLoading ? (
-                <Button variant="ghost" size="sm" className="w-full" disabled>
-                  Chargement...
-                </Button>
-              ) : isAuthenticated ? (
-                <>
-                  <Link to="/profile" className="block text-royal-blue-800 hover:text-gold-500">
-                    Mon profil
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-royal-blue-800 hover:bg-gold-100 w-full"
-                    onClick={async () => {
-                      await logout();
-                      setMobileMenuOpen(false);
-                    }}
-                  >
-                    Déconnexion
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" className="block text-royal-blue-800 hover:text-gold-500">
-                    Connexion
-                  </Link>
-                  <Link to="/signup" className="block text-royal-blue-800 hover:text-gold-500">
-                    S'inscrire
-                  </Link>
-                </>
-              )}
-            </div>
-          </nav>
-        )}
-      </div>
-    </header>
-
-      {/* Hero Section */}
-      <section className="py-12 md:py-20">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-bold text-royal-blue-900 mb-6">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-royal-blue-700 to-gold-500">
-                La Tocarde
-              </span>
-              {" "}vous souhaite le {salutation} !
-            </h2>
-            {!isAuthenticated && (
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/signup">
-                  <Button size="lg" className="bg-royal-blue-800 hover:bg-royal-blue-900 text-gold-300">
-                    S'inscrire
-                  </Button>
-                </Link>
-              </div>
-            )}
-
+            <Button
+              variant="ghost"
+              size="sm"
+              className="md:hidden text-royal-blue-800 hover:bg-gold-100"
+              onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
           </div>
+          {isMobileMenuOpen && (
+            <nav className="md:hidden mt-4 space-y-2 animate-in slide-in-from-top-4 duration-300">
+              <Link to="/" className="block text-royal-blue-800 hover:text-gold-500">
+                Accueil
+              </Link>
+              <Link to="/events" className="block text-royal-blue-800 hover:text-gold-500 font-semibold">
+                Événements
+              </Link>
+              <Link to="#apropos" className="block text-royal-blue-800 hover:text-gold-500">
+                À propos
+              </Link>
+              <Link to="#contact" className="block text-royal-blue-800 hover:text-gold-500">
+                Contact
+              </Link>
+              <div className="pt-2 border-t border-gold-200 space-y-2">
+                {isLoading ? (
+                  <Button variant="ghost" size="sm" className="w-full" disabled>
+                    Chargement...
+                  </Button>
+                ) : isAuthenticated ? (
+                  <>
+                    <Link to="/profile" className="block text-royal-blue-800 hover:text-gold-500">
+                      Mon profil
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-royal-blue-800 hover:bg-gold-100 w-full"
+                      onClick={async () => {
+                        await logout();
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      Déconnexion
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login" className="block text-royal-blue-800 hover:text-gold-500">
+                      Connexion
+                    </Link>
+                    <Link to="/signup" className="block text-royal-blue-800 hover:text-gold-500">
+                      S'inscrire
+                    </Link>
+                  </>
+                )}
+              </div>
+            </nav>
+          )}
         </div>
-      </section>
+      </header>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Login/Register Section */}
-          <div className="lg:col-span-1">
-            <section>
-              <h3 className="text-2xl font-bold text-royal-blue-900 mb-6 flex items-center gap-2">
-                <ExternalLink className="h-6 w-6 text-royal-blue-800" />
-                Liens Importants
-              </h3>
-
-              <div className="grid md:grid-cols-1 gap-4">
-                <Spinner show={linksLoading} />
-                {!linksLoading && importantLinks.results.map((link) => (
-                  <ImportantLink
-                    key={link.id}
-                    title={link.name}
-                    description={link.description || ''}
-                    url={link.url}
-                  />
-                ))}
-              </div>
-            </section>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-royal-blue-900 flex items-center gap-2 mb-2">
+              <Calendar className="h-8 w-8 text-royal-blue-800" />
+              Tous les événements
+            </h1>
+            <p className="text-royal-blue-700">
+              Découvrez tous les événements organisés par La Tocarde
+            </p>
           </div>
-
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Upcoming Events Section */}
-            <section id="evenements">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-royal-blue-900 flex items-center gap-2">
-                  <Calendar className="h-6 w-6 text-royal-blue-800" />
-                  Événements à venir
-                </h3>
-                <Link to="/events">
-                  <Button variant="ghost" size="sm" className="text-royal-blue-800 hover:bg-gold-100">
-                    Voir tout
-                    <ExternalLink className="h-4 w-4 ml-1" />
-                  </Button>
-                </Link>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <Spinner show={eventsLoading} />
-                {!eventsLoading && (
-                events.results
-                  .filter(
-                    (event) =>
-                      event.at_compiegne && event.is_public
-                  )
-                  .map((event) => (
-                    <EventCard key={event.id} event={event} />
-                  )))}
-              </div>
-            </section>
+          <div className="mt-4 md:mt-0">
+            <Button
+              variant="outline"
+              onClick={toggleFilters}
+              className="flex items-center gap-2 bg-white"
+            >
+              <Filter className="h-4 w-4" />
+              Filtrer
+            </Button>
           </div>
+        </div>
+
+        {showFilters && (
+          <div className="bg-white shadow rounded-lg p-4 mb-6 animate-in slide-in-from-top">
+            <h2 className="font-medium mb-3">Filtres</h2>
+            <div className="flex flex-wrap gap-3">
+              <Badge
+                variant={filters.atCompiegne ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => updateFilter("atCompiegne", !filters.atCompiegne)}
+              >
+                À Compiègne
+              </Badge>
+              <Badge
+                variant={filters.isPublic ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => updateFilter("isPublic", !filters.isPublic)}
+              >
+                Public
+              </Badge>
+              <Badge
+                variant={filters.type === "ALL" ? "default" : "outline"}
+                className="cursor-pointer bg-royal-blue-600 hover:bg-royal-blue-700"
+                onClick={() => updateFilter("type", "ALL")}
+              >
+                Tous types
+              </Badge>
+              <Badge
+                variant={filters.type === "CONGRESS" ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => updateFilter("type", "CONGRESS")}
+              >
+                Congrès
+              </Badge>
+              <Badge
+                variant={filters.type === "DRINK" ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => updateFilter("type", "DRINK")}
+              >
+                Apéral
+              </Badge>
+              <Badge
+                variant={filters.type === "OFFICE" ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => updateFilter("type", "OFFICE")}
+              >
+                Bureau
+              </Badge>
+              <Badge
+                variant={filters.type === "OTHER" ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => updateFilter("type", "OTHER")}
+              >
+                Autre
+              </Badge>
+            </div>
+          </div>
+        )}
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Spinner show={eventsLoading} />
+          {!eventsLoading && filteredEvents.length > 0 ? (
+            filteredEvents.map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12 bg-white rounded-lg shadow">
+              <h3 className="text-xl font-medium text-royal-blue-800 mb-2">Aucun événement trouvé</h3>
+              <p className="text-royal-blue-600">Essayez de modifier vos filtres pour voir plus d'événements</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -289,7 +309,7 @@ export default function Home() {
               <h4 className="font-semibold mb-4">Liens Rapides</h4>
               <ul className="space-y-2 text-gray-300">
                 <li>
-                  <Link to="#" className="hover:text-white transition-colors">
+                  <Link to="/" className="hover:text-white transition-colors">
                     Accueil
                   </Link>
                 </li>
