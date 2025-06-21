@@ -38,9 +38,9 @@ export function EventCard({ event }: { event: EventType }) {
     };
 
     // Déterminer si subscriptions_count est un nombre ou un objet
-    const subscriptionStats = typeof event.subscriptions_count === 'number'
-        ? { YES: event.subscriptions_count, NO: 0, MAYBE: 0 } as SubscriptionStats
-        : event.subscriptions_count as SubscriptionStats;
+    const subscriptionStats: SubscriptionStats = typeof event.subscriptions_count === 'number'
+        ? { YES: event.subscriptions_count, NO: 0, MAYBE: 0 }
+        : event.subscriptions_count || { YES: 0, NO: 0, MAYBE: 0 };
 
     // Texte du bouton selon l'état d'inscription
     const buttonText = !isAuthenticated
@@ -78,14 +78,17 @@ export function EventCard({ event }: { event: EventType }) {
 
             <div className="flex flex-col mb-4 space-y-2">
                 <div className="flex -space-x-2 mr-2">
-                    {event.first_subscribers.slice(0, 3).map((i, idx) => (
-                        <Badge
-                            key={idx}
-                            className="w-6 h-6 rounded-full bg-royal-blue-600 text-gold-100 ring-2 ring-white flex items-center justify-center text-xs"
-                        >
-                            {i}
-                        </Badge>
-                    ))}
+                    {event.first_subscribers && event.first_subscribers.length > 0 ?
+                        event.first_subscribers.slice(0, 3).map((i, idx) => (
+                            <Badge
+                                key={idx}
+                                className="w-6 h-6 rounded-full bg-royal-blue-600 text-gold-100 ring-2 ring-white flex items-center justify-center text-xs"
+                            >
+                                {i}
+                            </Badge>
+                        ))
+                        : null
+                    }
                 </div>
 
                 <div className="grid grid-cols-3 gap-2 text-xs text-center">

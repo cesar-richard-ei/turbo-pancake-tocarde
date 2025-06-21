@@ -1,226 +1,180 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import { useAuth } from './auth/AuthContext';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { Menu } from 'lucide-react';
 
 export function NavBar() {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const userData = user?.user || user;
+  const location = useLocation();
+  const pathname = location.pathname;
 
-  const userData = user?.profile;
-
-  const handleLogout = async () => {
-    await logout();
-  };
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return pathname === '/';
+    }
+    return pathname.startsWith(path);
   };
 
   return (
-    <nav className="bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
-              <Link to="/" className="text-xl font-bold text-blue-600">
-                Tocarde
-              </Link>
+    <header className="bg-white/95 backdrop-blur-sm shadow-[inset_0px_-5px_4px_-5px_hsl(59,_100%,_33%)] sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-royal-blue-800 to-gold-400 rounded-full flex items-center justify-center">
+              <span className="text-gold-300 font-bold text-lg">LT</span>
             </div>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link
-                to="/"
-                className="border-transparent text-gray-500 hover:border-blue-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Accueil
-              </Link>
-              <Link
-                to="/events"
-                className="border-transparent text-gray-500 hover:border-blue-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Événements
-              </Link>
-              {/* Ajoutez d'autres liens de navigation ici */}
+            <div>
+              <h1 className="text-xl font-bold text-royal-blue-800">La Tocarde</h1>
+              <p className="text-sm text-royal-blue-700">Association Étudiante</p>
             </div>
           </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-6">
+            <Link
+              to="/"
+              className={`text-royal-blue-800 hover:text-gold-500 transition-colors ${
+                isActive('/') ? 'border-b-2 border-gold-400' : ''
+              }`}
+            >
+              Accueil
+            </Link>
+            <Link
+              to="/events"
+              className={`text-royal-blue-800 hover:text-gold-500 transition-colors ${
+                isActive('/events') ? 'border-b-2 border-gold-400' : ''
+              }`}
+            >
+              Événements
+            </Link>
+            <Link
+              to="/about"
+              className={`text-royal-blue-800 hover:text-gold-500 transition-colors ${
+                isActive('/about') ? 'border-b-2 border-gold-400' : ''
+              }`}
+            >
+              À propos
+            </Link>
+            <Link to="#contact" className="text-royal-blue-800 hover:text-gold-500 transition-colors">
+              Contact
+            </Link>
+          </nav>
+          {/* Auth Buttons */}
+          <div className="hidden md:flex items-center space-x-3">
             {isLoading ? (
-              <div className="w-8 h-8 border-t-4 border-blue-500 border-solid rounded-full animate-spin" />
+              <Button variant="ghost" size="sm" className="text-royal-blue-800" disabled>
+                Chargement...
+              </Button>
             ) : isAuthenticated ? (
               <>
-                <div className="mr-4 text-gray-700">
-                  Bienvenue, <span className="font-semibold">{userData?.first_name || userData?.email}</span> !
-                </div>
-                <div className="ml-3 relative">
-                  <div>
-                    <button
-                      onClick={toggleMenu}
-                      className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                      id="user-menu-button"
-                      aria-expanded="false"
-                      aria-haspopup="true"
-                    >
-                      <span className="sr-only">Ouvrir le menu utilisateur</span>
-                      <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                        {userData?.email?.charAt(0).toUpperCase() || 'U'}
-                      </div>
-                    </button>
-                  </div>
-                  {isMenuOpen && (
-                    <div
-                      className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-                      role="menu"
-                      aria-orientation="vertical"
-                      aria-labelledby="user-menu-button"
-                      tabIndex={-1}
-                    >
-                      <div className="block px-4 py-2 text-xs text-gray-400">
-                        Connecté en tant que <span className="font-bold">{userData?.email || userData?.display}</span>
-                      </div>
-                      <Link
-                        to="/profile"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        role="menuitem"
-                        tabIndex={-1}
-                        id="user-menu-item-0"
-                      >
-                        Profil
-                      </Link>
-                      <button
-                        onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        role="menuitem"
-                        tabIndex={-1}
-                        id="user-menu-item-2"
-                      >
-                        Déconnexion
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </>
-            ) : (
-              <div className="flex items-center space-x-4">
-                <Link
-                  to="/login"
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Connexion
+                <Link to="/profile">
+                  <Badge variant="secondary">Mon profil</Badge>
                 </Link>
-                <Link
-                  to="/signup"
-                  className="bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Inscription
-                </Link>
-              </div>
-            )}
-          </div>
-          <div className="-mr-2 flex items-center sm:hidden">
-            <button
-              onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
-              aria-expanded="false"
-            >
-              <span className="sr-only">Ouvrir le menu principal</span>
-              <svg
-                className={`${isMenuOpen ? 'hidden' : 'block'} h-6 w-6`}
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-              <svg
-                className={`${isMenuOpen ? 'block' : 'hidden'} h-6 w-6`}
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Menu mobile */}
-      <div className={`${isMenuOpen ? 'block' : 'hidden'} sm:hidden`}>
-        <div className="pt-2 pb-3 space-y-1">
-          <Link
-            to="/"
-            className="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-          >
-            Accueil
-          </Link>
-          <Link
-            to="/events"
-            className="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-          >
-            Événements
-          </Link>
-          {/* Ajoutez d'autres liens de navigation ici */}
-        </div>
-        <div className="pt-4 pb-3 border-t border-gray-200">
-          {isAuthenticated ? (
-            <>
-              <div className="flex items-center px-4">
-                <div className="flex-shrink-0">
-                  <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                    {user?.email?.charAt(0).toUpperCase() || 'U'}
-                  </div>
-                </div>
-                <div className="ml-3">
-                  <div className="text-base font-medium text-gray-800">{user?.email}</div>
-                  <div className="text-sm font-medium text-gray-500">{user?.email}</div>
-                </div>
-              </div>
-              <div className="mt-3 space-y-1">
-                <Link
-                  to="/profile"
-                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                >
-                  Profil
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-royal-blue-800 hover:bg-gold-100"
+                  onClick={async () => {
+                    await logout();
+                  }}
                 >
                   Déconnexion
-                </button>
-              </div>
-            </>
-          ) : (
-            <div className="mt-3 space-y-1">
-              <Link
-                to="/login"
-                className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-              >
-                Connexion
-              </Link>
-              <Link
-                to="/signup"
-                className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-              >
-                Inscription
-              </Link>
-            </div>
-          )}
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="ghost" size="sm" className="text-royal-blue-800 hover:bg-gold-100">
+                    Connexion
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button size="sm" className="bg-gold-400 hover:bg-gold-500 text-royal-blue-900">
+                    S'inscrire
+                  </Button>
+                </Link>
+              </>
+            )}
+          </div>
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="md:hidden text-royal-blue-800 hover:bg-gold-100"
+            onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
         </div>
+        {isMobileMenuOpen && (
+          <nav className="md:hidden mt-4 space-y-2 animate-in slide-in-from-top-4 duration-300">
+            <Link
+              to="/"
+              className={`block text-royal-blue-800 hover:text-gold-500 ${
+                isActive('/') ? 'font-semibold' : ''
+              }`}
+            >
+              Accueil
+            </Link>
+            <Link
+              to="/events"
+              className={`block text-royal-blue-800 hover:text-gold-500 ${
+                isActive('/events') ? 'font-semibold' : ''
+              }`}
+            >
+              Événements
+            </Link>
+            <Link
+              to="/about"
+              className={`block text-royal-blue-800 hover:text-gold-500 ${
+                isActive('/about') ? 'font-semibold' : ''
+              }`}
+            >
+              À propos
+            </Link>
+            <Link to="#contact" className="block text-royal-blue-800 hover:text-gold-500">
+              Contact
+            </Link>
+            <div className="pt-2 border-t border-gold-200 space-y-2">
+              {isLoading ? (
+                <Button variant="ghost" size="sm" className="w-full" disabled>
+                  Chargement...
+                </Button>
+              ) : isAuthenticated ? (
+                <>
+                  <Link to="/profile" className="block text-royal-blue-800 hover:text-gold-500">
+                    Mon profil
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-royal-blue-800 hover:bg-gold-100 w-full"
+                    onClick={async () => {
+                      await logout();
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Déconnexion
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="block text-royal-blue-800 hover:text-gold-500">
+                    Connexion
+                  </Link>
+                  <Link to="/signup" className="block text-royal-blue-800 hover:text-gold-500">
+                    S'inscrire
+                  </Link>
+                </>
+              )}
+            </div>
+          </nav>
+        )}
       </div>
-    </nav>
+    </header>
   );
 }
