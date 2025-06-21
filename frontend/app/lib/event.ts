@@ -3,6 +3,15 @@ import { PaginatedSchema } from "./paginatedSchema";
 
 export const EventTypesSchema = z.enum(['CONGRESS', 'DRINK', 'OFFICE', 'OTHER']);
 export type EventTypes = z.infer<typeof EventTypesSchema>;
+
+export const SubscriptionStatsSchema = z.object({
+  YES: z.number(),
+  NO: z.number(),
+  MAYBE: z.number(),
+});
+
+export type SubscriptionStats = z.infer<typeof SubscriptionStatsSchema>;
+
 export const EventTypeSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -13,7 +22,10 @@ export const EventTypeSchema = z.object({
   at_compiegne: z.boolean(),
   is_public: z.boolean(),
   type: EventTypesSchema,
-  subscriptions_count: z.number().optional().default(0),
+  subscriptions_count: z.union([
+    z.number(), // Pour rétrocompatibilité avec l'ancienne API
+    SubscriptionStatsSchema
+  ]).default({ YES: 0, NO: 0, MAYBE: 0 }),
   first_subscribers: z.array(z.string()).default([]),
 });
 

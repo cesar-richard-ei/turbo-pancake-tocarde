@@ -1,18 +1,30 @@
-import { getEventTypes, type EventType } from "~/lib/event";
+import { useState } from "react";
+import { getEventTypes, type EventType, type SubscriptionStats } from "~/lib/event";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { Calendar, MapPin } from "lucide-react";
+import { Calendar, Check, HelpCircle, MapPin, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAuth } from "./auth/AuthContext";
-import { useCreateSubscription } from "~/lib/eventSubscription";
+import { EventSubscriptionDialog } from "./EventSubscriptionDialog";
 
 export function EventCard({ event }: { event: EventType }) {
     const { isAuthenticated } = useAuth();
-    const mutation = useCreateSubscription();
+    const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
 
-    const handleSubscribe = () => {
-        mutation.mutate(event.id);
+    const handleOpenDialog = () => {
+        setShowSubscriptionDialog(true);
     };
+
+    const handleCloseDialog = () => {
+        setShowSubscriptionDialog(false);
+    };
+
+    // Déterminer si subscriptions_count est un nombre ou un objet
+    const subscriptionStats = typeof event.subscriptions_count === 'number'
+        ? { YES: event.subscriptions_count, NO: 0, MAYBE: 0 } as SubscriptionStats
+        : event.subscriptions_count as SubscriptionStats;
+
+    const totalParticipants = subscriptionStats.YES + subscriptionStats.NO + subscriptionStats.MAYBE;
 
     return (
         <Card className="overflow-hidden hover:shadow-lg transition-shadow bg-white">
@@ -40,7 +52,8 @@ export function EventCard({ event }: { event: EventType }) {
             <p className="text-sm text-gray-700 mb-4">
                 {event.description}
             </p>
-            <div className="flex items-center mb-4">
+
+            <div className="flex flex-col mb-4 space-y-2">
                 <div className="flex -space-x-2 mr-2">
                     {event.first_subscribers.slice(0, 3).map((i, idx) => (
                         <Badge
@@ -51,21 +64,38 @@ export function EventCard({ event }: { event: EventType }) {
                         </Badge>
                     ))}
                 </div>
-                <span className="text-sm text-gray-600">
-                    {event.subscriptions_count} inscrit
-                    {event.subscriptions_count > 1 ? "s" : ""}
-                </span>
+
+                <div className="grid grid-cols-3 gap-2 text-xs text-center">
+                    <div className="flex items-center justify-center gap-1">
+                        <Check className="h-3 w-3 text-green-600" />
+                        <span>{subscriptionStats.YES} participant{subscriptionStats.YES > 1 ? 's' : ''}</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-1">
+                        <HelpCircle className="h-3 w-3 text-amber-600" />
+                        <span>{subscriptionStats.MAYBE} peut-être</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-1">
+                        <X className="h-3 w-3 text-red-600" />
+                        <span>{subscriptionStats.NO} non</span>
+                    </div>
+                </div>
             </div>
+
             {isAuthenticated && (
                 <Button
                     size="sm"
                     className="w-full bg-royal-blue-600 hover:bg-royal-blue-700"
-                    onClick={handleSubscribe}
-                    disabled={mutation.isPending}
+                    onClick={handleOpenDialog}
                 >
-                    {mutation.isPending ? '...': "S'inscrire"}
+                    S'inscrire
                 </Button>
             )}
+
+            <EventSubscriptionDialog
+                event={event}
+                isOpen={showSubscriptionDialog}
+                onClose={handleCloseDialog}
+            />
             </CardContent>
         </Card>
     )

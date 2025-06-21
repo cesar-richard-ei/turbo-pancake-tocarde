@@ -51,8 +51,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+export function HydrateFallback() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center">
+        <div className="h-16 w-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+        <p className="mt-4 text-lg text-gray-600">Chargement...</p>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
-  return <Outlet />; // App retourne maintenant directement Outlet
+  return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

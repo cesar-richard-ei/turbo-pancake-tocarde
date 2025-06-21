@@ -11,6 +11,7 @@ class EventSubscriptionSerializer(serializers.ModelSerializer):
             "user",
             "answer",
             "can_invite",
+            "is_active",
             "created_at",
             "updated_at",
         ]
