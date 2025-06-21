@@ -75,7 +75,7 @@ export default function Events() {
               <Link to="/events" className="text-royal-blue-800 hover:text-gold-500 transition-colors border-b-2 border-gold-400">
                 Événements
               </Link>
-              <Link to="#apropos" className="text-royal-blue-800 hover:text-gold-500 transition-colors">
+              <Link to="/about" className="text-royal-blue-800 hover:text-gold-500 transition-colors">
                 À propos
               </Link>
               <Link to="#contact" className="text-royal-blue-800 hover:text-gold-500 transition-colors">
@@ -137,7 +137,7 @@ export default function Events() {
               <Link to="/events" className="block text-royal-blue-800 hover:text-gold-500 font-semibold">
                 Événements
               </Link>
-              <Link to="#apropos" className="block text-royal-blue-800 hover:text-gold-500">
+              <Link to="/about" className="block text-royal-blue-800 hover:text-gold-500">
                 À propos
               </Link>
               <Link to="#contact" className="block text-royal-blue-800 hover:text-gold-500">
@@ -319,12 +319,12 @@ export default function Events() {
                   </Link>
                 </li>
                 <li>
-                  <Link to="#" className="hover:text-white transition-colors">
+                  <Link to="/about" className="hover:text-white transition-colors">
                     À propos
                   </Link>
                 </li>
                 <li>
-                  <Link to="#" className="hover:text-white transition-colors">
+                  <Link to="#contact" className="hover:text-white transition-colors">
                     Contact
                   </Link>
                 </li>

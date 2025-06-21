@@ -1,48 +1,22 @@
-import type { Route } from "./+types/home";
-import { useAuth } from "../components/auth/AuthContext";
+import { useState } from "react";
 import { Link } from 'react-router';
-import { Button } from '~/components/ui/button';
-import { Calendar, ExternalLink, Mail, MapPin, Menu } from 'lucide-react';
-import { useState } from 'react';
-import { Badge } from '~/components/ui/badge';
-import { Separator } from '~/components/ui/separator';
-import { ImportantLink } from "~/components/ImportantLink";
-import { useQuery } from "@tanstack/react-query";
-import { fetchLinks } from "~/lib/resources";
-import { fetchEvents } from "~/lib/event";
-import { EventCard } from "~/components/eventCard";
-import { Spinner } from "~/components/ui/spinner";
+import { useAuth } from "~/components/auth/AuthContext";
+import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
+import { Separator } from "~/components/ui/separator";
+import { Calendar, ExternalLink, Mail, Menu, MapPin, Users, School, BookOpen } from "lucide-react";
 
-/**
- * Détermine si c'est le jour ou la nuit
- * @returns "bonjour" entre 6h et 18h, "bonsoir" entre 18h et 6h
- */
-const getSalutationByTime = (): string => {
-  const currentHour = new Date().getHours();
-  return currentHour >= 6 && currentHour < 18 ? "bonjour" : "bonsoir";
-};
-
-export function meta({ }: Route.MetaArgs) {
+export function meta() {
   return [
-    { title: "Tocarde - Compiègne" },
-    { name: "description", content: "Bienvenue en capitale de la Tocardie !" },
+    { title: "À propos - La Tocarde" },
+    { name: "description", content: "Découvrez l'histoire et les valeurs de La Tocarde, association étudiante falucharde" },
   ];
 }
 
-export default function Home() {
+export default function AboutUs() {
   const { isAuthenticated, user, isLoading, logout } = useAuth();
   const userData = user?.user || user;
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const salutation = getSalutationByTime();
-
-  const { data: importantLinks = { results: [] }, isLoading: linksLoading } = useQuery({
-    queryKey: ["important-links"],
-    queryFn: fetchLinks,
-  });
-  const { data: events = { results: [] }, isLoading: eventsLoading } = useQuery({
-    queryKey: ["events"],
-    queryFn: fetchEvents,
-  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-royal-blue-100 to-gold-50">
@@ -68,7 +42,7 @@ export default function Home() {
               <Link to="/events" className="text-royal-blue-800 hover:text-gold-500 transition-colors">
                 Événements
               </Link>
-              <Link to="/about" className="text-royal-blue-800 hover:text-gold-500 transition-colors">
+              <Link to="/about" className="text-royal-blue-800 hover:text-gold-500 transition-colors border-b-2 border-gold-400">
                 À propos
               </Link>
               <Link to="#contact" className="text-royal-blue-800 hover:text-gold-500 transition-colors">
@@ -113,145 +87,159 @@ export default function Home() {
               )}
             </div>
             {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="md:hidden text-royal-blue-800 hover:bg-gold-100"
-            onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-        </div>
-        {isMobileMenuOpen && (
-          <nav className="md:hidden mt-4 space-y-2 animate-in slide-in-from-top-4 duration-300">
-            <Link to="/" className="block text-royal-blue-800 hover:text-gold-500">
-              Accueil
-            </Link>
-            <Link to="/events" className="block text-royal-blue-800 hover:text-gold-500">
-              Événements
-            </Link>
-            <Link to="/about" className="block text-royal-blue-800 hover:text-gold-500">
-              À propos
-            </Link>
-            <Link to="#contact" className="block text-royal-blue-800 hover:text-gold-500">
-              Contact
-            </Link>
-            <div className="pt-2 border-t border-gold-200 space-y-2">
-              {isLoading ? (
-                <Button variant="ghost" size="sm" className="w-full" disabled>
-                  Chargement...
-                </Button>
-              ) : isAuthenticated ? (
-                <>
-                  <Link to="/profile" className="block text-royal-blue-800 hover:text-gold-500">
-                    Mon profil
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-royal-blue-800 hover:bg-gold-100 w-full"
-                    onClick={async () => {
-                      await logout();
-                      setMobileMenuOpen(false);
-                    }}
-                  >
-                    Déconnexion
+            <Button
+              variant="ghost"
+              size="sm"
+              className="md:hidden text-royal-blue-800 hover:bg-gold-100"
+              onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          </div>
+          {isMobileMenuOpen && (
+            <nav className="md:hidden mt-4 space-y-2 animate-in slide-in-from-top-4 duration-300">
+              <Link to="/" className="block text-royal-blue-800 hover:text-gold-500">
+                Accueil
+              </Link>
+              <Link to="/events" className="block text-royal-blue-800 hover:text-gold-500">
+                Événements
+              </Link>
+              <Link to="/about" className="block text-royal-blue-800 hover:text-gold-500 font-semibold">
+                À propos
+              </Link>
+              <Link to="#contact" className="block text-royal-blue-800 hover:text-gold-500">
+                Contact
+              </Link>
+              <div className="pt-2 border-t border-gold-200 space-y-2">
+                {isLoading ? (
+                  <Button variant="ghost" size="sm" className="w-full" disabled>
+                    Chargement...
                   </Button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" className="block text-royal-blue-800 hover:text-gold-500">
-                    Connexion
-                  </Link>
-                  <Link to="/signup" className="block text-royal-blue-800 hover:text-gold-500">
-                    S'inscrire
-                  </Link>
-                </>
-              )}
-            </div>
-          </nav>
-        )}
-      </div>
-    </header>
+                ) : isAuthenticated ? (
+                  <>
+                    <Link to="/profile" className="block text-royal-blue-800 hover:text-gold-500">
+                      Mon profil
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-royal-blue-800 hover:bg-gold-100 w-full"
+                      onClick={async () => {
+                        await logout();
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      Déconnexion
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login" className="block text-royal-blue-800 hover:text-gold-500">
+                      Connexion
+                    </Link>
+                    <Link to="/signup" className="block text-royal-blue-800 hover:text-gold-500">
+                      S'inscrire
+                    </Link>
+                  </>
+                )}
+              </div>
+            </nav>
+          )}
+        </div>
+      </header>
 
-      {/* Hero Section */}
-      <section className="py-12 md:py-20">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-bold text-royal-blue-900 mb-6">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-royal-blue-700 to-gold-500">
-                La Tocarde
-              </span>
-              {" "}vous souhaite le {salutation} !
+      {/* Page Content */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-8">
+            <Users className="h-10 w-10 text-royal-blue-800" />
+            <h1 className="text-4xl font-bold text-royal-blue-900">À propos de La Tocarde</h1>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-lg p-8 mb-12">
+            <h2 className="text-2xl font-bold text-royal-blue-800 mb-4">Notre histoire</h2>
+            <p className="text-royal-blue-700 mb-6">
+              La Tocarde est une association étudiante falucharde fondée pour enrichir la vie universitaire
+              et perpétuer les traditions estudiantines. Depuis notre création, nous œuvrons à maintenir
+              vivant l'esprit de camaraderie et de tradition au sein de la communauté étudiante.
+            </p>
+
+            <h2 className="text-2xl font-bold text-royal-blue-800 mb-4 flex items-center gap-2">
+              <School className="h-6 w-6 text-royal-blue-700" />
+              Notre mission
             </h2>
-            {!isAuthenticated && (
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/signup">
-                  <Button size="lg" className="bg-royal-blue-800 hover:bg-royal-blue-900 text-gold-300">
-                    S'inscrire
-                  </Button>
-                </Link>
-              </div>
-            )}
+            <p className="text-royal-blue-700 mb-8">
+              Nous nous engageons à préserver et à transmettre les valeurs et les traditions
+              propres au patrimoine étudiant français. La Tocarde organise des événements culturels,
+              des rencontres et des célébrations qui rassemblent les étudiants autour de moments conviviaux
+              et d'échanges enrichissants.
+            </p>
 
-          </div>
-        </div>
-      </section>
-
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Login/Register Section */}
-          <div className="lg:col-span-1">
-            <section>
-              <h3 className="text-2xl font-bold text-royal-blue-900 mb-6 flex items-center gap-2">
-                <ExternalLink className="h-6 w-6 text-royal-blue-800" />
-                Liens Importants
-              </h3>
-
-              <div className="grid md:grid-cols-1 gap-4">
-                <Spinner show={linksLoading} />
-                {!linksLoading && importantLinks.results.map((link) => (
-                  <ImportantLink
-                    key={link.id}
-                    title={link.name}
-                    description={link.description || ''}
-                    url={link.url}
-                  />
-                ))}
-              </div>
-            </section>
-          </div>
-
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Upcoming Events Section */}
-            <section id="evenements">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-royal-blue-900 flex items-center gap-2">
-                  <Calendar className="h-6 w-6 text-royal-blue-800" />
-                  Événements à venir
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              <div className="bg-gold-50 rounded-lg p-6 shadow-sm border border-gold-100">
+                <h3 className="text-xl font-semibold text-royal-blue-800 mb-3 flex items-center gap-2">
+                  <BookOpen className="h-5 w-5 text-gold-600" />
+                  Nos valeurs
                 </h3>
-                <Link to="/events">
-                  <Button variant="ghost" size="sm" className="text-royal-blue-800 hover:bg-gold-100">
-                    Voir tout
-                    <ExternalLink className="h-4 w-4 ml-1" />
-                  </Button>
-                </Link>
+                <ul className="space-y-2 text-royal-blue-700">
+                  <li className="flex items-start gap-2">
+                    <span className="text-gold-500 font-bold">•</span>
+                    <span>Camaraderie et entraide entre étudiants</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-gold-500 font-bold">•</span>
+                    <span>Respect des traditions faluchardes</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-gold-500 font-bold">•</span>
+                    <span>Partage des connaissances et expériences</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-gold-500 font-bold">•</span>
+                    <span>Promotion de la culture et du patrimoine étudiant</span>
+                  </li>
+                </ul>
               </div>
+              <div className="bg-royal-blue-50 rounded-lg p-6 shadow-sm border border-royal-blue-100">
+                <h3 className="text-xl font-semibold text-royal-blue-800 mb-3 flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-royal-blue-600" />
+                  Nos activités
+                </h3>
+                <ul className="space-y-2 text-royal-blue-700">
+                  <li className="flex items-start gap-2">
+                    <span className="text-royal-blue-500 font-bold">•</span>
+                    <span>Congrès et rencontres interrégionales</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-royal-blue-500 font-bold">•</span>
+                    <span>Soirées conviviales et "apérals"</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-royal-blue-500 font-bold">•</span>
+                    <span>Cérémonies de transmission des traditions</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-royal-blue-500 font-bold">•</span>
+                    <span>Événements culturels et historiques</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                <Spinner show={eventsLoading} />
-                {!eventsLoading && (
-                events.results
-                  .filter(
-                    (event) =>
-                      event.at_compiegne && event.is_public
-                  )
-                  .map((event) => (
-                    <EventCard key={event.id} event={event} />
-                  )))}
-              </div>
-            </section>
+            <h2 className="text-2xl font-bold text-royal-blue-800 mb-4">Rejoindre La Tocarde</h2>
+            <p className="text-royal-blue-700 mb-6">
+              Que vous soyez un étudiant curieux des traditions faluchardes ou déjà initié,
+              La Tocarde vous accueille à bras ouverts. Rejoindre notre association, c'est faire partie
+              d'une communauté soudée et participer à la perpétuation d'un riche patrimoine culturel.
+            </p>
+
+            <div className="flex justify-center mt-8">
+              <Link to="/signup">
+                <Button size="lg" className="bg-royal-blue-800 hover:bg-royal-blue-900 text-gold-300">
+                  Nous rejoindre
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -304,7 +292,7 @@ export default function Home() {
                   </Link>
                 </li>
                 <li>
-                  <Link to="#contact" className="hover:text-white transition-colors">
+                  <Link to="#" className="hover:text-white transition-colors">
                     Contact
                   </Link>
                 </li>
@@ -313,7 +301,7 @@ export default function Home() {
 
             {/* Contact Info */}
             <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
+              <h4 id="contact" className="font-semibold mb-4">Contact</h4>
               <div className="space-y-3 text-gray-300">
                 <div className="flex items-center space-x-2">
                   <Mail className="h-4 w-4" />
