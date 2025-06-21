@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getEventTypes, type EventType, type SubscriptionStats } from "~/lib/event";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
@@ -6,10 +6,28 @@ import { Calendar, Check, HelpCircle, MapPin, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAuth } from "./auth/AuthContext";
 import { EventSubscriptionDialog } from "./EventSubscriptionDialog";
+import { useUserSubscriptions, getUserSubscriptionForEvent } from "~/lib/eventSubscription";
+import { Link } from "react-router";
 
 export function EventCard({ event }: { event: EventType }) {
     const { isAuthenticated } = useAuth();
     const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
+    const { data: userSubscriptions, isLoading: subscriptionsLoading } = useUserSubscriptions();
+    const [isSubscribed, setIsSubscribed] = useState(false);
+    const [eventSubscription, setEventSubscription] = useState<any>(undefined);
+
+    // Mettre à jour l'état d'inscription quand les données sont chargées
+    useEffect(() => {
+        if (userSubscriptions?.results && userSubscriptions.results.length > 0) {
+            const subscription = getUserSubscriptionForEvent(userSubscriptions.results, event.id);
+            setEventSubscription(subscription);
+            setIsSubscribed(Boolean(subscription));
+            console.log(`Event ${event.id} - Found subscription:`, subscription);
+        } else {
+            setIsSubscribed(false);
+            setEventSubscription(undefined);
+        }
+    }, [userSubscriptions, event.id]);
 
     const handleOpenDialog = () => {
         setShowSubscriptionDialog(true);
@@ -24,7 +42,12 @@ export function EventCard({ event }: { event: EventType }) {
         ? { YES: event.subscriptions_count, NO: 0, MAYBE: 0 } as SubscriptionStats
         : event.subscriptions_count as SubscriptionStats;
 
-    const totalParticipants = subscriptionStats.YES + subscriptionStats.NO + subscriptionStats.MAYBE;
+    // Texte du bouton selon l'état d'inscription
+    const buttonText = !isAuthenticated
+        ? "Se connecter pour s'inscrire"
+        : (isSubscribed ? "Modifier ma réponse" : "S'inscrire");
+
+    console.log(`Event ${event.id} - Button text: ${buttonText}, isSubscribed: ${isSubscribed}`);
 
     return (
         <Card className="overflow-hidden hover:shadow-lg transition-shadow bg-white">
@@ -81,13 +104,22 @@ export function EventCard({ event }: { event: EventType }) {
                 </div>
             </div>
 
-            {isAuthenticated && (
+            {!isAuthenticated ? (
+                <Link to="/login">
+                    <Button
+                        size="sm"
+                        className="w-full bg-royal-blue-600 hover:bg-royal-blue-700"
+                    >
+                        Se connecter pour s'inscrire
+                    </Button>
+                </Link>
+            ) : (
                 <Button
                     size="sm"
                     className="w-full bg-royal-blue-600 hover:bg-royal-blue-700"
                     onClick={handleOpenDialog}
                 >
-                    S'inscrire
+                    {isSubscribed ? "Modifier ma réponse" : "S'inscrire"}
                 </Button>
             )}
 
@@ -95,6 +127,8 @@ export function EventCard({ event }: { event: EventType }) {
                 event={event}
                 isOpen={showSubscriptionDialog}
                 onClose={handleCloseDialog}
+                existingSubscription={eventSubscription}
+                key={`dialog-${event.id}-${eventSubscription?.id || 'new'}-${showSubscriptionDialog}`}
             />
             </CardContent>
         </Card>

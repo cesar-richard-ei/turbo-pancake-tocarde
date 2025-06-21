@@ -1,27 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import type { EventType } from "~/lib/event";
-import { AnswerEnum, useCreateSubscription } from "~/lib/eventSubscription";
+import { AnswerEnum, useCreateSubscription, type EventSubscription } from "~/lib/eventSubscription";
 import { Spinner } from "./ui/spinner";
+import type { z } from "zod";
 
 interface EventSubscriptionDialogProps {
   event: EventType;
   isOpen: boolean;
   onClose: () => void;
+  existingSubscription?: EventSubscription;
 }
 
 export function EventSubscriptionDialog({
   event,
   isOpen,
   onClose,
+  existingSubscription
 }: EventSubscriptionDialogProps) {
-  const [answer, setAnswer] = useState<AnswerEnum>("YES");
-  const [canInvite, setCanInvite] = useState<boolean>(false);
+  // Initialiser les valeurs par défaut en fonction de l'inscription existante
+  const [answer, setAnswer] = useState<z.infer<typeof AnswerEnum>>(
+    existingSubscription?.answer || "YES"
+  );
+  const [canInvite, setCanInvite] = useState<boolean>(
+    existingSubscription?.can_invite || false
+  );
   const mutation = useCreateSubscription();
 
+  console.log("EventSubscriptionDialog rendered", { existingSubscription, isOpen, answer, canInvite });
+
+  // Mettre à jour les valeurs quand l'inscription existante change ou quand le dialogue s'ouvre
+  useEffect(() => {
+    if (isOpen) {
+      if (existingSubscription) {
+        console.log("Setting values from existing subscription:", existingSubscription);
+        setAnswer(existingSubscription.answer);
+        setCanInvite(existingSubscription.can_invite);
+      } else {
+        // Réinitialiser à des valeurs par défaut si pas d'inscription existante
+        console.log("Resetting to default values");
+        setAnswer("YES");
+        setCanInvite(false);
+      }
+    }
+  }, [existingSubscription, isOpen]);
+
   const handleSubmit = () => {
+    console.log("Submitting with values:", { answer, canInvite });
     mutation.mutate({
       eventId: event.id,
       data: {
@@ -29,13 +56,18 @@ export function EventSubscriptionDialog({
         can_invite: canInvite,
       },
     });
+    onClose(); // Fermer la boîte de dialogue après soumission
   };
+
+  const isEditing = Boolean(existingSubscription);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>S'inscrire à {event.name}</DialogTitle>
+          <DialogTitle>
+            {isEditing ? "Modifier ma réponse" : `S'inscrire à ${event.name}`}
+          </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
@@ -91,7 +123,7 @@ export function EventSubscriptionDialog({
             className="bg-royal-blue-600 hover:bg-royal-blue-700"
           >
             {mutation.isPending ? <Spinner className="mr-2" /> : null}
-            Confirmer
+            {isEditing ? "Mettre à jour" : "Confirmer"}
           </Button>
         </div>
       </DialogContent>

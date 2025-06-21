@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { getCSRFToken } from "./django";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "~/components/auth/AuthContext";
 
 export const AnswerEnum = z.enum(["YES", "NO", "MAYBE"]);
 
@@ -10,9 +12,20 @@ export const EventSubscriptionSchema = z.object({
   event: z.number(),
   user: z.number(),
   is_active: z.boolean(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
 });
 
 export type EventSubscription = z.infer<typeof EventSubscriptionSchema>;
+
+export const PaginatedEventSubscriptionsSchema = z.object({
+  count: z.number(),
+  next: z.string().nullable(),
+  previous: z.string().nullable(),
+  results: z.array(EventSubscriptionSchema),
+});
+
+export type PaginatedEventSubscriptions = z.infer<typeof PaginatedEventSubscriptionsSchema>;
 
 export type CreateSubscriptionData = {
   answer?: z.infer<typeof AnswerEnum>;
@@ -52,6 +65,45 @@ export async function createSubscription(
     throw error;
   }
 }
+
+export async function fetchUserSubscriptions(): Promise<PaginatedEventSubscriptions> {
+  try {
+    console.log("Fetching user subscriptions...");
+    const resp = await fetch(`/api/event/event-subscriptions/`, {
+      credentials: 'include',
+    });
+
+    if (!resp.ok) {
+      throw new Error(`Failed to fetch subscriptions: ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    console.log("User subscriptions data:", data);
+    return PaginatedEventSubscriptionsSchema.parse(data);
+  } catch (error) {
+    console.error("Error fetching user subscriptions:", error);
+    throw error;
+  }
+}
+
+export function useUserSubscriptions() {
+  const { isAuthenticated } = useAuth();
+
+  return useQuery({
+    queryKey: ["user-subscriptions"],
+    queryFn: fetchUserSubscriptions,
+    enabled: isAuthenticated, // Ne pas essayer de récupérer si l'utilisateur n'est pas connecté
+    staleTime: 1000 * 60 * 5, // Considérer les données fraîches pendant 5 minutes
+    retry: 1, // Réessayer une seule fois en cas d'échec
+  });
+}
+
+export function getUserSubscriptionForEvent(subscriptions: EventSubscription[], eventId: number): EventSubscription | undefined {
+  const subscription = subscriptions.find(sub => sub.event === eventId);
+  console.log(`Looking for subscription to event ${eventId}:`, subscription);
+  return subscription;
+}
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -64,6 +116,7 @@ export function useCreateSubscription() {
       toast.success("Inscription enregistrée");
       // Invalider les queries d'événements pour forcer un rafraîchissement
       queryClient.invalidateQueries({ queryKey: ['events'] });
+      queryClient.invalidateQueries({ queryKey: ['user-subscriptions'] });
 
       // Rafraîchir la page pour éviter les problèmes de port déconnecté
       setTimeout(() => {
