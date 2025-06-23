@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchEvents } from "~/lib/event";
+import { fetchEvents, type EventType, type PaginatedEvents } from "~/lib/event";
 import { EventCard } from "~/components/eventCard";
+import { EventDetailDialog } from "~/components/EventDetailDialog";
 import { Spinner } from "~/components/ui/spinner";
 import { Separator } from "~/components/ui/separator";
 import { useState } from "react";
@@ -22,17 +23,18 @@ export default function Events() {
   const { isAuthenticated, user, isLoading, logout } = useAuth();
   const userData = user?.user || user;
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { data: events = { results: [] }, isLoading: eventsLoading } = useQuery({
+  const { data: events = { results: [] }, isLoading: eventsLoading } = useQuery<PaginatedEvents>({
     queryKey: ["events"],
     queryFn: fetchEvents,
   });
 
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
-    atCompiegne: true,
-    isPublic: true,
+    atCompiegne: false,
     type: "ALL"
   });
+
+  const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
 
   const toggleFilters = () => {
     setShowFilters(!showFilters);
@@ -47,7 +49,6 @@ export default function Events() {
 
   const filteredEvents = events.results.filter(event => {
     if (filters.atCompiegne && !event.at_compiegne) return false;
-    if (filters.isPublic && !event.is_public) return false;
     if (filters.type !== "ALL" && event.type !== filters.type) return false;
     return true;
   });
@@ -87,13 +88,6 @@ export default function Events() {
                 onClick={() => updateFilter("atCompiegne", !filters.atCompiegne)}
               >
                 À Compiègne
-              </Badge>
-              <Badge
-                variant={filters.isPublic ? "default" : "outline"}
-                className="cursor-pointer"
-                onClick={() => updateFilter("isPublic", !filters.isPublic)}
-              >
-                Public
               </Badge>
               <Badge
                 variant={filters.type === "ALL" ? "default" : "outline"}
@@ -137,8 +131,8 @@ export default function Events() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Spinner show={eventsLoading} />
           {!eventsLoading && filteredEvents.length > 0 ? (
-            filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
+            (filteredEvents as EventType[]).map((event) => (
+              <EventCard key={event.id} event={event} onSelect={(e) => setSelectedEvent(e)} />
             ))
           ) : (
             <div className="col-span-full text-center py-12 bg-white rounded-lg shadow">
@@ -147,6 +141,7 @@ export default function Events() {
             </div>
           )}
         </div>
+        <EventDetailDialog event={selectedEvent} isOpen={selectedEvent !== null} onClose={() => setSelectedEvent(null)} />
       </div>
     </Layout>
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { getEventTypes, type EventType, type SubscriptionStats } from "~/lib/event";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
@@ -9,7 +9,7 @@ import { EventSubscriptionDialog } from "./EventSubscriptionDialog";
 import { useUserSubscriptions, getUserSubscriptionForEvent } from "~/lib/eventSubscription";
 import { Link } from "react-router";
 
-export function EventCard({ event }: { event: EventType }) {
+export function EventCard({ event, onSelect }: { event: EventType; onSelect?: (e: EventType) => void }) {
     const { isAuthenticated } = useAuth();
     const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
     const { data: userSubscriptions, isLoading: subscriptionsLoading } = useUserSubscriptions();
@@ -49,8 +49,14 @@ export function EventCard({ event }: { event: EventType }) {
 
     console.log(`Event ${event.id} - Button text: ${buttonText}, isSubscribed: ${isSubscribed}`);
 
+    const handleCardClick = (e: React.MouseEvent) => {
+        if (onSelect && !(e.target as HTMLElement).closest('button')) {
+            onSelect(event)
+        }
+    }
+
     return (
-        <Card className="overflow-hidden hover:shadow-lg transition-shadow bg-white">
+        <Card className="overflow-hidden hover:shadow-lg transition-shadow bg-white flex flex-col h-full" onClick={handleCardClick}>
             <div className="aspect-video relative">
             <img
                 src="https://picsum.photos/400/200"
@@ -59,7 +65,7 @@ export function EventCard({ event }: { event: EventType }) {
             />
             <Badge className="absolute top-3 left-3 bg-red-500 hover:bg-red-500 text-white">{getEventTypes(event.type)}</Badge>
             </div>
-            <CardContent className="p-4">
+            <CardContent className="p-4 flex flex-col flex-1">
             <h4 className="font-semibold text-lg mb-2 text-royal-blue-900">{event.name}</h4>
             <div className="flex items-center text-sm text-royal-blue-700 mb-2">
                 <Calendar className="h-4 w-4 mr-1" />
@@ -76,7 +82,7 @@ export function EventCard({ event }: { event: EventType }) {
                 {event.description}
             </p>
 
-            <div className="flex flex-col mb-4 space-y-2">
+            <div className="flex flex-col mb-4 space-y-2 flex-1">
                 <div className="flex -space-x-2 mr-2">
                     {event.first_subscribers && event.first_subscribers.length > 0 ?
                         event.first_subscribers.slice(0, 3).map((i, idx) => (
@@ -107,6 +113,7 @@ export function EventCard({ event }: { event: EventType }) {
                 </div>
             </div>
 
+            <div className="mt-auto">
             {!isAuthenticated ? (
                 <Link to="/login">
                     <Button
@@ -125,6 +132,7 @@ export function EventCard({ event }: { event: EventType }) {
                     {isSubscribed ? "Modifier ma réponse" : "S'inscrire"}
                 </Button>
             )}
+            </div>
 
             <EventSubscriptionDialog
                 event={event}
