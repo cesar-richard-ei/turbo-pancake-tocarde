@@ -16,6 +16,7 @@ export const EventTypeSchema = z.object({
   id: z.number(),
   name: z.string(),
   description: z.string().optional(),
+  prices: z.string().optional(),
   start_date: z.string(),
   end_date: z.string(),
   location: z.string(),

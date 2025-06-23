@@ -36,7 +36,7 @@ export function EventDetailDialog({ event, isOpen, onClose }: EventDetailDialogP
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-3xl">
+      <DialogContent className="sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle>{event.name}</DialogTitle>
         </DialogHeader>
@@ -53,15 +53,15 @@ export function EventDetailDialog({ event, isOpen, onClose }: EventDetailDialogP
             <div className="grid grid-cols-3 gap-2 text-xs text-center">
               <div className="flex items-center justify-center gap-1">
                 <Check className="h-3 w-3 text-green-600" />
-                <span>{subscriptionStats.YES} participant{subscriptionStats.YES > 1 ? 's' : ''}</span>
+                <span className="whitespace-nowrap">{subscriptionStats.YES} participant{subscriptionStats.YES > 1 ? 's' : ''}</span>
               </div>
               <div className="flex items-center justify-center gap-1">
                 <HelpCircle className="h-3 w-3 text-amber-600" />
-                <span>{subscriptionStats.MAYBE} peut-être</span>
+                <span className="whitespace-nowrap">{subscriptionStats.MAYBE} peut-être</span>
               </div>
               <div className="flex items-center justify-center gap-1">
                 <X className="h-3 w-3 text-red-600" />
-                <span>{subscriptionStats.NO} non</span>
+                <span className="whitespace-nowrap">{subscriptionStats.NO} non</span>
               </div>
             </div>
             <div className="space-y-2">
