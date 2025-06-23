@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 import { getEventTypes, type EventType, type SubscriptionStats } from "~/lib/event";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
@@ -56,7 +57,7 @@ export function EventCard({ event, onSelect }: { event: EventType; onSelect?: (e
     }
 
     return (
-        <Card className="overflow-hidden hover:shadow-lg transition-shadow bg-white flex flex-col h-full" onClick={handleCardClick}>
+        <Card className="overflow-hidden hover:shadow-lg transition-shadow bg-white flex flex-col h-full cursor-pointer" onClick={handleCardClick}>
             <div className="aspect-video relative">
             <img
                 src="https://picsum.photos/400/200"
@@ -78,9 +79,9 @@ export function EventCard({ event, onSelect }: { event: EventType; onSelect?: (e
                 <MapPin className="h-4 w-4 mr-1" />
                 {event.location}
             </div>
-            <p className="text-sm text-gray-700 mb-4">
-                {event.description}
-            </p>
+            <div className="text-sm text-gray-700 mb-4 prose">
+                {event.description ? <ReactMarkdown>{event.description}</ReactMarkdown> : null}
+            </div>
 
             <div className="flex flex-col mb-4 space-y-2 flex-1">
                 <div className="flex -space-x-2 mr-2">
@@ -100,15 +101,15 @@ export function EventCard({ event, onSelect }: { event: EventType; onSelect?: (e
                 <div className="grid grid-cols-3 gap-2 text-xs text-center">
                     <div className="flex items-center justify-center gap-1">
                         <Check className="h-3 w-3 text-green-600" />
-                        <span>{subscriptionStats.YES} participant{subscriptionStats.YES > 1 ? 's' : ''}</span>
+                        <span className="whitespace-nowrap">{subscriptionStats.YES} participant{subscriptionStats.YES > 1 ? 's' : ''}</span>
                     </div>
                     <div className="flex items-center justify-center gap-1">
                         <HelpCircle className="h-3 w-3 text-amber-600" />
-                        <span>{subscriptionStats.MAYBE} peut-être</span>
+                        <span className="whitespace-nowrap">{subscriptionStats.MAYBE} peut-être</span>
                     </div>
                     <div className="flex items-center justify-center gap-1">
                         <X className="h-3 w-3 text-red-600" />
-                        <span>{subscriptionStats.NO} non</span>
+                        <span className="whitespace-nowrap">{subscriptionStats.NO} non</span>
                     </div>
                 </div>
             </div>
