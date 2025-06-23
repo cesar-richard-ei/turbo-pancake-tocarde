@@ -23,7 +23,6 @@ export function EventCard({ event, onSelect }: { event: EventType; onSelect?: (e
             const subscription = getUserSubscriptionForEvent(userSubscriptions.results, event.id);
             setEventSubscription(subscription);
             setIsSubscribed(Boolean(subscription));
-            console.log(`Event ${event.id} - Found subscription:`, subscription);
         } else {
             setIsSubscribed(false);
             setEventSubscription(undefined);
@@ -48,7 +47,6 @@ export function EventCard({ event, onSelect }: { event: EventType; onSelect?: (e
         ? "Se connecter pour s'inscrire"
         : (isSubscribed ? "Modifier ma réponse" : "S'inscrire");
 
-    console.log(`Event ${event.id} - Button text: ${buttonText}, isSubscribed: ${isSubscribed}`);
 
     const handleCardClick = (e: React.MouseEvent) => {
         if (onSelect && !(e.target as HTMLElement).closest('button')) {

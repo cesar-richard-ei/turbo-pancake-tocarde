@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
 import { Calendar, Check, HelpCircle, MapPin, X } from "lucide-react";
 import { useAuth } from "./auth/AuthContext";
 import { EventSubscriptionDialog } from "./EventSubscriptionDialog";
