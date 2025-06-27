@@ -5,7 +5,24 @@ import { EventDetailDialog } from "~/components/EventDetailDialog";
 import { Spinner } from "~/components/ui/spinner";
 import { Separator } from "~/components/ui/separator";
 import { useState } from "react";
-import { Calendar, ExternalLink, Filter, Mail, Menu, MapPin } from "lucide-react";
+import {
+  Calendar as CalendarIcon,
+  ExternalLink,
+  Filter,
+  Mail,
+  Menu,
+  MapPin,
+} from "lucide-react";
+import {
+  Calendar as BigCalendar,
+  dateFnsLocalizer,
+} from "react-big-calendar";
+import { format } from "date-fns/format";
+import { parse } from "date-fns/parse";
+import { startOfWeek } from "date-fns/startOfWeek";
+import { getDay } from "date-fns/getDay";
+import { fr } from "date-fns/locale/fr";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { Link } from 'react-router';
@@ -36,6 +53,15 @@ export default function Events() {
 
   const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
 
+  const locales = { fr };
+  const localizer = dateFnsLocalizer({
+    format,
+    parse,
+    startOfWeek,
+    getDay,
+    locales,
+  });
+
   const toggleFilters = () => {
     setShowFilters(!showFilters);
   };
@@ -53,13 +79,19 @@ export default function Events() {
     return true;
   });
 
+  const calendarEvents = filteredEvents.map(event => ({
+    title: event.name,
+    start: new Date(event.start_date),
+    end: new Date(event.end_date),
+  }));
+
   return (
     <Layout className="bg-gradient-to-br from-royal-blue-100 to-gold-50">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-royal-blue-900 flex items-center gap-2 mb-2">
-              <Calendar className="h-8 w-8 text-royal-blue-800" />
+              <CalendarIcon className="h-8 w-8 text-royal-blue-800" />
               Tous les événements
             </h1>
             <p className="text-royal-blue-700">
@@ -127,6 +159,19 @@ export default function Events() {
             </div>
           </div>
         )}
+
+        <div className="mb-8 bg-white p-4 rounded-lg shadow">
+          <BigCalendar
+            localizer={localizer}
+            events={calendarEvents}
+            startAccessor="start"
+            endAccessor="end"
+            defaultView="month"
+            views={["month"]}
+            style={{ height: 500 }}
+            culture="fr"
+          />
+        </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Spinner show={eventsLoading} />
