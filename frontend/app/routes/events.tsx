@@ -52,6 +52,7 @@ export default function Events() {
   });
 
   const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
+  const [calendarDate, setCalendarDate] = useState(new Date());
 
   const locales = { fr };
   const localizer = dateFnsLocalizer({
@@ -84,6 +85,20 @@ export default function Events() {
     start: new Date(event.start_date),
     end: new Date(event.end_date),
   }));
+
+  const calendarMessages = {
+    today: "Aujourd'hui",
+    previous: "Mois précédent",
+    next: "Mois suivant",
+    month: "Mois",
+    week: "Semaine",
+    day: "Jour",
+    agenda: "Agenda",
+    date: "Date",
+    time: "Heure",
+    event: "Événement",
+    showMore: (total: number) => `+ ${total} plus`,
+  };
 
   return (
     <Layout className="bg-gradient-to-br from-royal-blue-100 to-gold-50">
@@ -170,6 +185,21 @@ export default function Events() {
             views={["month"]}
             style={{ height: 500 }}
             culture="fr"
+            messages={calendarMessages}
+            date={calendarDate}
+            onNavigate={date => setCalendarDate(date)}
+            onSelectEvent={(event) => {
+              // On recherche l'événement complet à partir du titre et de la date
+              const found = filteredEvents.find(e => e.name === event.title && new Date(e.start_date).getTime() === event.start.getTime());
+              if (found) {
+                // On force les champs optionnels à être présents si besoin
+                setSelectedEvent({
+                  ...found,
+                  subscriptions_count: found.subscriptions_count ?? 0,
+                  first_subscribers: found.first_subscribers ?? [],
+                });
+              }
+            }}
           />
         </div>
 
