@@ -1,5 +1,12 @@
 from django.contrib import admin
-from ft.event.models import Event, EventSubscription, EventHosting, EventHostingRequest
+from ft.event.models import (
+    Event,
+    EventSubscription,
+    EventHosting,
+    EventHostingRequest,
+    CarpoolTrip,
+    CarpoolRequest,
+)
 
 
 @admin.register(Event)
@@ -67,5 +74,50 @@ class EventHostingRequestAdmin(admin.ModelAdmin):
         "hosting__event__name",
         "requester__first_name",
         "requester__last_name",
+    )
+    ordering = ("-created_at",)
+
+
+@admin.register(CarpoolTrip)
+class CarpoolTripAdmin(admin.ModelAdmin):
+    list_display = (
+        "driver",
+        "event",
+        "departure_city",
+        "arrival_city",
+        "departure_datetime",
+        "seats_total",
+        "seats_available",
+        "is_active",
+    )
+    list_filter = ("event", "is_active", "has_return", "allow_luggage", "allow_pets")
+    readonly_fields = ("created_at", "updated_at")
+    search_fields = (
+        "driver__first_name",
+        "driver__last_name",
+        "departure_city",
+        "arrival_city",
+    )
+    ordering = ("-departure_datetime",)
+
+
+@admin.register(CarpoolRequest)
+class CarpoolRequestAdmin(admin.ModelAdmin):
+    list_display = (
+        "passenger",
+        "trip",
+        "status",
+        "seats_requested",
+        "is_paid",
+        "is_active",
+        "created_at",
+    )
+    list_filter = ("status", "is_active", "is_paid")
+    readonly_fields = ("created_at", "updated_at")
+    search_fields = (
+        "passenger__first_name",
+        "passenger__last_name",
+        "trip__departure_city",
+        "trip__arrival_city",
     )
     ordering = ("-created_at",)
