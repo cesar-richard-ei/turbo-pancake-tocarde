@@ -4,6 +4,9 @@ from ft.event.views import (
     EventSubscriptionViewSet,
     EventHostingViewSet,
     EventHostingRequestViewSet,
+    CarpoolTripViewSet,
+    CarpoolRequestViewSet,
+    CarpoolPaymentViewSet,
 )
 from rest_framework import routers
 
@@ -23,6 +26,21 @@ api_router.register(
     r"event-hosting-requests",
     EventHostingRequestViewSet,
     basename="event-hosting-request",
+)
+api_router.register(
+    r"carpool-trips",
+    CarpoolTripViewSet,
+    basename="carpool-trip",
+)
+api_router.register(
+    r"carpool-requests",
+    CarpoolRequestViewSet,
+    basename="carpool-request",
+)
+api_router.register(
+    r"carpool-payments",
+    CarpoolPaymentViewSet,
+    basename="carpool-payment",
 )
 
 urlpatterns = [
