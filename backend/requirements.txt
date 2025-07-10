@@ -3,6 +3,7 @@ django
 django-cors-headers
 django-environ
 django-extensions
+django-filter
 django-split-settings
 djangorestframework
 python-dotenv

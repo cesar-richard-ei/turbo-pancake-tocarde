@@ -90,7 +90,7 @@ class CarpoolTripAdmin(admin.ModelAdmin):
         "seats_available",
         "is_active",
     )
-    list_filter = ("event", "is_active", "has_return", "allow_luggage", "allow_pets")
+    list_filter = ("event", "is_active", "has_return")
     readonly_fields = ("created_at", "updated_at")
     search_fields = (
         "driver__first_name",
@@ -112,7 +112,7 @@ class CarpoolRequestAdmin(admin.ModelAdmin):
         "is_active",
         "created_at",
     )
-    list_filter = ("status", "is_active", "is_paid")
+    list_filter = ("status", "is_active")
     readonly_fields = ("created_at", "updated_at")
     search_fields = (
         "passenger__first_name",

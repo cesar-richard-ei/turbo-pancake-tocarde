@@ -22,6 +22,8 @@ class CarpoolTrip(models.Model):
         verbose_name="Événement",
         help_text="Événement lié au trajet",
         related_name="carpool_trips",
+        null=True,
+        blank=True,
     )
     departure_city = models.CharField(
         max_length=255,
@@ -73,16 +75,6 @@ class CarpoolTrip(models.Model):
         default=0.00,
         verbose_name="Prix par place",
         help_text="Prix demandé par passager (en €)",
-    )
-    allow_luggage = models.BooleanField(
-        default=True,
-        verbose_name="Bagages autorisés",
-        help_text="Si les bagages sont autorisés",
-    )
-    allow_pets = models.BooleanField(
-        default=False,
-        verbose_name="Animaux autorisés",
-        help_text="Si les animaux de compagnie sont autorisés",
     )
     additional_info = models.TextField(
         null=True,
