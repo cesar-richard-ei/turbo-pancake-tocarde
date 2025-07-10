@@ -1,10 +1,31 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { Separator } from './ui/separator';
 import { Button } from './ui/button';
 import { Mail } from 'lucide-react';
 
+let cachedVersion: string | null = null;
+
 export function Footer() {
+  const [version, setVersion] = useState<string>('');
+
+  useEffect(() => {
+    if (cachedVersion === null) {
+      fetch('/api/version/')
+        .then(response => response.json())
+        .then(data => {
+          cachedVersion = data.version;
+          setVersion(data.version);
+        })
+        .catch(() => {
+          cachedVersion = 'N/A';
+          setVersion('N/A');
+        });
+    } else {
+      setVersion(cachedVersion);
+    }
+  }, []);
+
   return (
     <footer className="bg-gray-900 text-white mt-16">
       <div className="container mx-auto px-4 py-12">
@@ -78,6 +99,9 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
             © 2024 - {new Date().getFullYear()} La Tocarde. Tous droits réservés.
+          </p>
+          <p className="text-gray-400 text-sm mb-4 md:mb-0">
+            <Link to="/version">{version || 'Chargement...'}</Link>
           </p>
           <div className="flex space-x-6 text-sm">
             <Link to="#" className="text-gray-400 hover:text-white transition-colors">

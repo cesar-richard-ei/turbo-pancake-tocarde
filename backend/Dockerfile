@@ -58,4 +58,7 @@ RUN DJANGO_SECRET_KEY=whatever python manage.py collectstatic --noinput --clear
 
 EXPOSE 8000
 
+ARG FT_VERSION=development
+ENV VERSION=${FT_VERSION}
+
 CMD ["gunicorn", "ft.wsgi:application", "--bind", "0.0.0.0:8000"]

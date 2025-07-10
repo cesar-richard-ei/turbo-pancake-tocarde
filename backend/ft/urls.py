@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularRedocView, SpectacularAPIView
+from ft.views.VersionView import VersionView
 
 
 def health_check(request):
@@ -20,6 +21,7 @@ urlpatterns = (
         path("api/user/", include("ft.user.urls")),
         path("api/event/", include("ft.event.urls")),
         path("api/resources/", include("ft.resources.urls")),
+        path("api/version/", VersionView.as_view(), name="version"),
         path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
         path(
             "api/schema/redoc/",
